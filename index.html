@@ -43,5 +43,37 @@
     </main>
 
     <script src="./script.js"></script>
+
+
+<!-- Modern Bottom Tab Bar -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 lg:hidden">
+    <div class="flex justify-around items-center h-16">
+        <!-- Home Tab -->
+        <a href="#" class="flex flex-col items-center justify-center text-primary">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        
+        <!-- Categories Tab -->
+        <a href="#" class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">
+            <i class="fas fa-th-large text-xl"></i>
+            <span class="text-xs mt-1">Categories</span>
+        </a>
+        
+        <!-- Cart Tab -->
+        <a href="#" id="mobileCartBtn" class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary transition-colors relative">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span class="text-xs mt-1">Cart</span>
+            <!-- Cart Badge -->
+            <span id="mobileCartCount" class="absolute -top-1 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+        </a>
+        
+        <!-- Account Tab -->
+        <a href="#" id="mobileAccountBtn" class="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">
+            <i class="fas fa-user text-xl"></i>
+            <span class="text-xs mt-1">Account</span>
+        </a>
+    </div>
+</nav>
 </body>
 </html>
