@@ -168,19 +168,39 @@ function setupBottomNavigation() {
         });
     }
 
-    // Categories Button - Open categories sidebar
+    // Categories Button - Open categories modal
 const categoriesBtn = document.getElementById('mobileCategoriesBtn');
-if (categoriesBtn) {
+const categoriesModal = document.getElementById('categoriesModal');
+const closeCategoriesModal = document.getElementById('closeCategoriesModal');
+
+if (categoriesBtn && categoriesModal) {
     categoriesBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        // Open the categories sidebar (if you have one)
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar) {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-        } else {
-            // Fallback: show categories in a modal
-            alert('Categories: Electronics, Fashion, Home, Sports, Books, Toys');
-        }
+        categoriesModal.classList.remove('hidden');
     });
+}
+
+if (closeCategoriesModal) {
+    closeCategoriesModal.addEventListener('click', function() {
+        categoriesModal.classList.add('hidden');
+    });
+}
+
+// Category filter functionality
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('category-filter')) {
+        const category = e.target.dataset.category;
+        filterProductsByCategory(category);
+        categoriesModal.classList.add('hidden');
+    }
+});
+
+function filterProductsByCategory(category) {
+    if (category === 'all') {
+        currentProducts = [...products];
+    } else {
+        currentProducts = products.filter(product => product.category === category);
+    }
+    renderProducts();
+    showToast(`Showing ${category} products`);
 }
