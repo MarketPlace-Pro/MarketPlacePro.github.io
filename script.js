@@ -134,3 +134,43 @@ function updateCartCount() {
         mobileCountElement.classList.add('hidden');
     }
 }
+// Get the buttons by their IDs
+const mobileHomeBtn = document.getElementById('mobileHomeBtn');
+const mobileCategoriesBtn = document.getElementById('mobileCategoriesBtn');
+const mobileCartBtn = document.getElementById('mobileCartBtn');
+const mobileAccountBtn = document.getElementById('mobileAccountBtn');
+
+// Add event listeners
+mobileHomeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeAllModals();
+});
+
+mobileCategoriesBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    sidebar.classList.remove('-translate-x-full');
+    overlay.classList.remove('hidden');
+});
+
+mobileCartBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    cartSidebar.classList.remove('translate-x-full');
+    overlay.classList.remove('hidden');
+    renderCartItems();
+});
+
+mobileAccountBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    userModal.classList.remove('hidden');
+    userModal.classList.add('flex');
+});
+
+// Helper function to close all modals
+function closeAllModals() {
+    cartSidebar.classList.add('translate-x-full');
+    userModal.classList.add('hidden');
+    userModal.classList.remove('flex');
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+}
