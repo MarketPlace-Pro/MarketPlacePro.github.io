@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace Pro - Global E-commerce Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Replace 'your-kit-id' with your actual FontAwesome Kit ID -->
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'primary-dark': '#4C4BC7',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700">
+        <!-- ... (Keep all the header HTML from your original code) ... -->
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300">
+            <!-- ... (Keep all the sidebar HTML from your original code) ... -->
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-0 p-4 lg:p-6">
+            <!-- ... (Keep all the main content HTML from your original code) ... -->
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <!-- ... (Keep the product modal HTML from your original code) ... -->
+    </div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 z-50 w-96 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+        <!-- ... (Keep the cart sidebar HTML from your original code) ... -->
+    </div>
+
+    <!-- User Account Modal -->
+    <div id="userModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <!-- ... (Keep the user modal HTML from your original code) ... -->
+    </div>
+
+    <!-- Overlay for mobile -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+
+    <!-- Success Toast -->
+    <div id="toast" class="fixed top-4 right-4 z-60 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Product added to cart!</span>
+        </div>
+    </div>
+
+    <!-- Link to the external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
