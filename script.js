@@ -37,10 +37,15 @@ let wishlist = [];
 
 // DOM Elements
 const productsContainer = document.getElementById('productsContainer');
+const cartSidebar = document.getElementById('cartSidebar');
+const userModal = document.getElementById('userModal');
+const overlay = document.getElementById('overlay');
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     renderProducts();
+    setupBottomNavigation();
+    updateCartCounts();
 });
 
 // Render products
@@ -50,13 +55,13 @@ function renderProducts() {
     
     currentProducts.forEach(product => {
         const card = document.createElement('div');
-        card.className = 'bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow';
+        card.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-md transition-shadow';
         
         const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
         
         card.innerHTML = `
             <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded mb-4">
-            <h3 class="font-semibold text-lg mb-2">${product.name}</h3>
+            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">${product.name}</h3>
             <div class="flex items-center mb-2">
                 <div class="text-yellow-400">
                     ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
@@ -68,114 +73,90 @@ function renderProducts() {
                 ${product.originalPrice > product.price ? 
                     `<span class="text-gray-500 line-through text-sm">$${product.originalPrice}</span>` : ''}
             </div>
-            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" data-id="${product.id}">
                 Add to Cart
             </button>
         `;
+        
+        // Add event listener to the button
+        const addButton = card.querySelector('.add-to-cart-btn');
+        addButton.addEventListener('click', function() {
+            addToCart(product.id);
+        });
         
         container.appendChild(card);
     });
 }
 
-// Bottom Tab Bar Functionality
-document.addEventListener('DOMContentLoaded', function() {
+// Add to cart function
+function addToCart(productId, quantity = 1) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ ...product, quantity });
+    }
+
+    updateCartCounts();
+    showToast('Product added to cart!');
+}
+
+// Update all cart counts
+function updateCartCounts() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    
+    // Update header cart count
+    const headerCountElement = document.getElementById('cartCount');
+    if (headerCountElement) {
+        if (count > 0) {
+            headerCountElement.textContent = count;
+            headerCountElement.classList.remove('hidden');
+        } else {
+            headerCountElement.classList.add('hidden');
+        }
+    }
+    
     // Update mobile cart count
-    updateMobileCartCount();
-    
-    // Add click events to mobile tabs
-    document.getElementById('mobileCartBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Open the cart sidebar
-        cartSidebar.classList.remove('translate-x-full');
-        renderCartItems();
-    });
-    
-    document.getElementById('mobileAccountBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Open the user modal
-        userModal.classList.remove('hidden');
-        userModal.classList.add('flex');
-    });
-    
-    // Make categories tab open the sidebar on mobile
-    document.querySelector('a[href="#"]:nth-child(2)').addEventListener('click', function(e) {
-        e.preventDefault();
-        sidebar.classList.remove('-translate-x-full');
-        overlay.classList.remove('hidden');
-    });
-});
-
-// Function to update mobile cart count
-function updateMobileCartCount() {
-    const count = cart.reduce((total, item) => total + item.quantity, 0);
-    const countElement = document.getElementById('mobileCartCount');
-    if (count > 0) {
-        countElement.textContent = count;
-        countElement.classList.remove('hidden');
-    } else {
-        countElement.classList.add('hidden');
-    }
-}
-
-// Also update the mobile count when you update the main cart count
-// Modify your existing updateCartCount function:
-function updateCartCount() {
-    const count = cart.reduce((total, item) => total + item.quantity, 0);
-    const countElement = document.getElementById('cartCount');
     const mobileCountElement = document.getElementById('mobileCartCount');
-    
-    if (count > 0) {
-        countElement.textContent = count;
-        countElement.classList.remove('hidden');
-        mobileCountElement.textContent = count;
-        mobileCountElement.classList.remove('hidden');
-    } else {
-        countElement.classList.add('hidden');
-        mobileCountElement.classList.add('hidden');
+    if (mobileCountElement) {
+        if (count > 0) {
+            mobileCountElement.textContent = count;
+            mobileCountElement.classList.remove('hidden');
+        } else {
+            mobileCountElement.classList.add('hidden');
+        }
     }
 }
-// Get the buttons by their IDs
-const mobileHomeBtn = document.getElementById('mobileHomeBtn');
-const mobileCategoriesBtn = document.getElementById('mobileCategoriesBtn');
-const mobileCartBtn = document.getElementById('mobileCartBtn');
-const mobileAccountBtn = document.getElementById('mobileAccountBtn');
 
-// Add event listeners
-mobileHomeBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    closeAllModals();
-});
-
-mobileCategoriesBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    sidebar.classList.remove('-translate-x-full');
-    overlay.classList.remove('hidden');
-});
-
-mobileCartBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    cartSidebar.classList.remove('translate-x-full');
-    overlay.classList.remove('hidden');
-    renderCartItems();
-});
-
-mobileAccountBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    userModal.classList.remove('hidden');
-    userModal.classList.add('flex');
-});
-
-// Helper function to close all modals
-function closeAllModals() {
-    cartSidebar.classList.add('translate-x-full');
-    userModal.classList.add('hidden');
-    userModal.classList.remove('flex');
-    sidebar.classList.add('-translate-x-full');
-    overlay.classList.add('hidden');
+// Show toast notification
+function showToast(message) {
+    // Create toast if it doesn't exist
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'fixed top-4 right-4 z-60 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300';
+        toast.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-check-circle"></i>
+                <span id="toastMessage">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(toast);
+    }
+    
+    document.getElementById('toastMessage').textContent = message;
+    toast.classList.remove('translate-x-full');
+    
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+    }, 3000);
 }
 
-// Bottom Navigation Functionality - SIMPLE & RELIABLE
+// Bottom Navigation Functionality
 function setupBottomNavigation() {
     // Home Button - Scroll to top
     const homeBtn = document.getElementById('mobileHomeBtn');
@@ -187,13 +168,12 @@ function setupBottomNavigation() {
         });
     }
 
-    // Categories Button - Open sidebar
+    // Categories Button - Show alert (you can expand this later)
     const categoriesBtn = document.getElementById('mobileCategoriesBtn');
     if (categoriesBtn) {
         categoriesBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
+            alert('Categories feature coming soon!');
         });
     }
 
@@ -204,7 +184,6 @@ function setupBottomNavigation() {
             e.preventDefault();
             cartSidebar.classList.remove('translate-x-full');
             overlay.classList.remove('hidden');
-            renderCartItems();
         });
     }
 
@@ -214,7 +193,6 @@ function setupBottomNavigation() {
         accountBtn.addEventListener('click', function(e) {
             e.preventDefault();
             userModal.classList.remove('hidden');
-            userModal.classList.add('flex');
         });
     }
 }
@@ -222,42 +200,32 @@ function setupBottomNavigation() {
 // Helper function to close all modals
 function closeAllModals() {
     if (cartSidebar) cartSidebar.classList.add('translate-x-full');
-    if (userModal) {
-        userModal.classList.add('hidden');
-        userModal.classList.remove('flex');
-    }
-    if (sidebar) sidebar.classList.add('-translate-x-full');
+    if (userModal) userModal.classList.add('hidden');
     if (overlay) overlay.classList.add('hidden');
 }
 
-// Update mobile cart count
-function updateMobileCartCount() {
-    const mobileCountElement = document.getElementById('mobileCartCount');
-    if (mobileCountElement) {
-        const count = cart.reduce((total, item) => total + item.quantity, 0);
-        if (count > 0) {
-            mobileCountElement.textContent = count;
-            mobileCountElement.classList.remove('hidden');
-        } else {
-            mobileCountElement.classList.add('hidden');
-        }
-    }
-}
-
-// Call this function when the page loads
+// Close buttons functionality
 document.addEventListener('DOMContentLoaded', function() {
-    setupBottomNavigation();
-    updateMobileCartCount();
+    // Close cart button
+    const closeCartBtn = document.getElementById('closeCart');
+    if (closeCartBtn) {
+        closeCartBtn.addEventListener('click', function() {
+            closeAllModals();
+        });
+    }
     
-    // Also update mobile cart count when regular cart updates
-    // Modify your existing addToCart function to call updateMobileCartCount();
+    // Close user modal button
+    const closeUserModalBtn = document.getElementById('closeUserModal');
+    if (closeUserModalBtn) {
+        closeUserModalBtn.addEventListener('click', function() {
+            closeAllModals();
+        });
+    }
+    
+    // Overlay click to close modals
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            closeAllModals();
+        });
+    }
 });
-
-// ALSO: Update your existing addToCart function to update the mobile counter
-// Find this function in your code and ADD the line at the end:
-function addToCart(productId, quantity = 1) {
-    // ... your existing addToCart code ...
-    
-    // ADD THIS LINE AT THE END OF THE FUNCTION:
-    updateMobileCartCount(); // Update the mobile tab bar counter too
-}
