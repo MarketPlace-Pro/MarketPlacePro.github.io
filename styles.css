@@ -14,3 +14,49 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Bottom Tab Bar Animation */
+nav a {
+    transition: all 0.2s ease-in-out;
+}
+
+nav a:hover {
+    transform: translateY(-2px);
+}
+
+/* Active State for Tabs */
+nav a.active {
+    color: #5D5CDE; /* Your primary color */
+}
+
+nav a.active span {
+    font-weight: 600;
+}
+
+/* Glassmorphism effect for modern look */
+.glass-tabbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass-tabbar {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Smooth transitions for tab interactions */
+.tab-item {
+    transition: all 0.3s ease;
+    padding: 12px 16px;
+    border-radius: 12px;
+}
+
+.tab-item:hover {
+    background: rgba(93, 92, 222, 0.1);
+    transform: translateY(-2px);
+}
+
+.tab-item.active {
+    background: #5D5CDE;
+    color: white;
+    box-shadow: 0 4px 12px rgba(93, 92, 222, 0.3);
+}
