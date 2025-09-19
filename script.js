@@ -229,3 +229,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Categories Button - Scroll to categories section
+const categoriesBtn = document.getElementById('mobileCategoriesBtn');
+if (categoriesBtn) {
+    categoriesBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Scroll to categories section (you'd need to add this to your HTML)
+        const categoriesSection = document.getElementById('categoriesSection');
+        if (categoriesSection) {
+            categoriesSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            // Fallback: show quick categories
+            alert('📱 Electronics\n👕 Fashion\n🏠 Home\n⚽ Sports\n📚 Books\n🎮 Toys');
+        }
+    });
+}
