@@ -174,3 +174,90 @@ function closeAllModals() {
     sidebar.classList.add('-translate-x-full');
     overlay.classList.add('hidden');
 }
+
+// Bottom Navigation Functionality - SIMPLE & RELIABLE
+function setupBottomNavigation() {
+    // Home Button - Scroll to top
+    const homeBtn = document.getElementById('mobileHomeBtn');
+    if (homeBtn) {
+        homeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            closeAllModals();
+        });
+    }
+
+    // Categories Button - Open sidebar
+    const categoriesBtn = document.getElementById('mobileCategoriesBtn');
+    if (categoriesBtn) {
+        categoriesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        });
+    }
+
+    // Cart Button - Open cart sidebar
+    const cartBtn = document.getElementById('mobileCartBtn');
+    if (cartBtn) {
+        cartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            cartSidebar.classList.remove('translate-x-full');
+            overlay.classList.remove('hidden');
+            renderCartItems();
+        });
+    }
+
+    // Account Button - Open user modal
+    const accountBtn = document.getElementById('mobileAccountBtn');
+    if (accountBtn) {
+        accountBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            userModal.classList.remove('hidden');
+            userModal.classList.add('flex');
+        });
+    }
+}
+
+// Helper function to close all modals
+function closeAllModals() {
+    if (cartSidebar) cartSidebar.classList.add('translate-x-full');
+    if (userModal) {
+        userModal.classList.add('hidden');
+        userModal.classList.remove('flex');
+    }
+    if (sidebar) sidebar.classList.add('-translate-x-full');
+    if (overlay) overlay.classList.add('hidden');
+}
+
+// Update mobile cart count
+function updateMobileCartCount() {
+    const mobileCountElement = document.getElementById('mobileCartCount');
+    if (mobileCountElement) {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        if (count > 0) {
+            mobileCountElement.textContent = count;
+            mobileCountElement.classList.remove('hidden');
+        } else {
+            mobileCountElement.classList.add('hidden');
+        }
+    }
+}
+
+// Call this function when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupBottomNavigation();
+    updateMobileCartCount();
+    
+    // Also update mobile cart count when regular cart updates
+    // Modify your existing addToCart function to call updateMobileCartCount();
+});
+
+// ALSO: Update your existing addToCart function to update the mobile counter
+// Find this function in your code and ADD the line at the end:
+function addToCart(productId, quantity = 1) {
+    // ... your existing addToCart code ...
+    
+    // ADD THIS LINE AT THE END OF THE FUNCTION:
+    updateMobileCartCount(); // Update the mobile tab bar counter too
+}
