@@ -168,80 +168,19 @@ function setupBottomNavigation() {
         });
     }
 
-    // Categories Button - Show alert (you can expand this later)
-    const categoriesBtn = document.getElementById('mobileCategoriesBtn');
-    if (categoriesBtn) {
-        categoriesBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Categories feature coming soon!');
-        });
-    }
-
-    // Cart Button - Open cart sidebar
-    const cartBtn = document.getElementById('mobileCartBtn');
-    if (cartBtn) {
-        cartBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            cartSidebar.classList.remove('translate-x-full');
-            overlay.classList.remove('hidden');
-        });
-    }
-
-    // Account Button - Open user modal
-    const accountBtn = document.getElementById('mobileAccountBtn');
-    if (accountBtn) {
-        accountBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            userModal.classList.remove('hidden');
-        });
-    }
-}
-
-// Helper function to close all modals
-function closeAllModals() {
-    if (cartSidebar) cartSidebar.classList.add('translate-x-full');
-    if (userModal) userModal.classList.add('hidden');
-    if (overlay) overlay.classList.add('hidden');
-}
-
-// Close buttons functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Close cart button
-    const closeCartBtn = document.getElementById('closeCart');
-    if (closeCartBtn) {
-        closeCartBtn.addEventListener('click', function() {
-            closeAllModals();
-        });
-    }
-    
-    // Close user modal button
-    const closeUserModalBtn = document.getElementById('closeUserModal');
-    if (closeUserModalBtn) {
-        closeUserModalBtn.addEventListener('click', function() {
-            closeAllModals();
-        });
-    }
-    
-    // Overlay click to close modals
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            closeAllModals();
-        });
-    }
-});
-
-// Categories Button - Scroll to categories section
+    // Categories Button - Open categories sidebar
 const categoriesBtn = document.getElementById('mobileCategoriesBtn');
 if (categoriesBtn) {
     categoriesBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        // Scroll to categories section (you'd need to add this to your HTML)
-        const categoriesSection = document.getElementById('categoriesSection');
-        if (categoriesSection) {
-            categoriesSection.scrollIntoView({ behavior: 'smooth' });
+        // Open the categories sidebar (if you have one)
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
         } else {
-            // Fallback: show quick categories
-            alert('📱 Electronics\n👕 Fashion\n🏠 Home\n⚽ Sports\n📚 Books\n🎮 Toys');
+            // Fallback: show categories in a modal
+            alert('Categories: Electronics, Fashion, Home, Sports, Books, Toys');
         }
     });
 }
