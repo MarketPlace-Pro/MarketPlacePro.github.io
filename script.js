@@ -14,38 +14,65 @@ const products = [
         shipping: "Free",
         inStock: true
     },
-    // ... (KEEP THE ENTIRE products ARRAY FROM YOUR ORIGINAL CODE) ...
+    {
+        id: 2,
+        name: "Smart Fitness Watch",
+        category: "electronics",
+        price: 199.99,
+        originalPrice: 249.99,
+        rating: 4.7,
+        reviews: 856,
+        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
+        description: "Advanced fitness tracking with heart rate monitor and GPS.",
+        seller: "FitTech Solutions",
+        shipping: "Free",
+        inStock: true
+    }
 ];
 
 // Global state
 let currentProducts = [...products];
 let cart = [];
 let wishlist = [];
-let currentView = 'grid';
-let currentCategory = 'all';
-let currentSort = 'popular';
-let displayedProducts = 8;
 
 // DOM Elements
 const productsContainer = document.getElementById('productsContainer');
-const productModal = document.getElementById('productModal');
-const cartSidebar = document.getElementById('cartSidebar');
-const userModal = document.getElementById('userModal');
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-const toast = document.getElementById('toast');
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     renderProducts();
-    setupEventListeners();
-    updateCartCount();
-    updateWishlistCount();
 });
 
-// ... (KEEP ALL THE REST OF YOUR JAVASCRIPT FUNCTIONS FROM setupEventListeners() TO THE VERY END) ...
-// Event Listeners
-function setupEventListeners() { ... }
 // Render products
-function renderProducts() { ... }
-// ... and so on, until the final closing brace.
+function renderProducts() {
+    const container = productsContainer;
+    container.innerHTML = '';
+    
+    currentProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow';
+        
+        const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+        
+        card.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded mb-4">
+            <h3 class="font-semibold text-lg mb-2">${product.name}</h3>
+            <div class="flex items-center mb-2">
+                <div class="text-yellow-400">
+                    ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
+                </div>
+                <span class="text-gray-500 text-sm ml-2">(${product.reviews})</span>
+            </div>
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl font-bold text-blue-600">$${product.price}</span>
+                ${product.originalPrice > product.price ? 
+                    `<span class="text-gray-500 line-through text-sm">$${product.originalPrice}</span>` : ''}
+            </div>
+            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">
+                Add to Cart
+            </button>
+        `;
+        
+        container.appendChild(card);
+    });
+}
