@@ -76,3 +76,61 @@ function renderProducts() {
         container.appendChild(card);
     });
 }
+
+// Bottom Tab Bar Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Update mobile cart count
+    updateMobileCartCount();
+    
+    // Add click events to mobile tabs
+    document.getElementById('mobileCartBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Open the cart sidebar
+        cartSidebar.classList.remove('translate-x-full');
+        renderCartItems();
+    });
+    
+    document.getElementById('mobileAccountBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Open the user modal
+        userModal.classList.remove('hidden');
+        userModal.classList.add('flex');
+    });
+    
+    // Make categories tab open the sidebar on mobile
+    document.querySelector('a[href="#"]:nth-child(2)').addEventListener('click', function(e) {
+        e.preventDefault();
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+    });
+});
+
+// Function to update mobile cart count
+function updateMobileCartCount() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    const countElement = document.getElementById('mobileCartCount');
+    if (count > 0) {
+        countElement.textContent = count;
+        countElement.classList.remove('hidden');
+    } else {
+        countElement.classList.add('hidden');
+    }
+}
+
+// Also update the mobile count when you update the main cart count
+// Modify your existing updateCartCount function:
+function updateCartCount() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    const countElement = document.getElementById('cartCount');
+    const mobileCountElement = document.getElementById('mobileCartCount');
+    
+    if (count > 0) {
+        countElement.textContent = count;
+        countElement.classList.remove('hidden');
+        mobileCountElement.textContent = count;
+        mobileCountElement.classList.remove('hidden');
+    } else {
+        countElement.classList.add('hidden');
+        mobileCountElement.classList.add('hidden');
+    }
+}
