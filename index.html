@@ -272,5 +272,31 @@
         // Simple function to show the bottom nav is working
         console.log("Bottom navigation is ready!");
     </script>
+<!-- Categories Modal -->
+<div id="categoriesModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Categories</h2>
+                <button id="closeCategoriesModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">✕</button>
+            </div>
+            <div class="space-y-2">
+                <button class="category-filter w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg" data-category="all">
+                    All Products
+                </button>
+                <button class="category-filter w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg" data-category="electronics">
+                    Electronics
+                </button>
+                <button class="category-filter w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg" data-category="fashion">
+                    Fashion
+                </button>
+                <button class="category-filter w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg" data-category="home">
+                    Home & Garden
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
