@@ -1,152 +1,43 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MarketPlace Pro - Global E-commerce Platform</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Store</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="app">
+<body>
 
-  <header class="app-header glass">
-    <div class="brand">
-      <h1>MarketPlace Pro</h1>
-      <p class="muted">Global E-commerce Platform</p>
-    </div>
-    <nav class="header-actions">
-      <button id="userBtn" class="btn" title="Account"><span>Account</span></button>
-      <button id="openCartBtn" class="btn" title="Cart">Cart (<span id="cartCount">0</span>)</button>
-    </nav>
-  </header>
+    <!-- Header Section -->
+    <header>
+        <h1>My Online Store</h1>
+        <div id="auth-section">
+            <button id="login-btn">Login</button>
+            <button id="logout-btn" style="display: none;">Logout</button>
+        </div>
+    </header>
 
-  <main class="container">
-    <section class="hero glass">
-      <h2>Welcome Back</h2>
-      <p class="muted">Browse trending products or manage your account.</p>
+    <!-- Product Display Section -->
+    <section id="product-list">
+        <h2>Our Products</h2>
+        <div id="product-container"></div>
+        <div id="pagination"></div>
     </section>
 
-    <section id="productsSection">
-      <div class="section-header">
-        <h3>Products</h3>
-        <div class="filters">
-          <button class="category-btn category-filter" data-category="all">All</button>
-          <button class="category-btn category-filter" data-category="electronics">Electronics</button>
-          <button class="category-btn category-filter" data-category="fitness">Fitness</button>
-        </div>
-      </div>
-
-      <div id="productsContainer" class="products-grid"></div>
+    <!-- Cart Section -->
+    <section id="cart-section">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <button id="checkout-btn">Checkout</button>
     </section>
-  </main>
 
-  <!-- Cart Sidebar -->
-  <aside id="cartSidebar" class="cart-sidebar translate-x-full">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <button id="closeCartBtn" class="btn">Close</button>
-    </div>
-    <div id="cartItems" class="cart-items"></div>
-    <div class="cart-footer">
-      <div id="cartTotal" class="cart-total">Total: $0.00</div>
-      <button id="checkoutBtn" class="btn primary">Checkout</button>
-    </div>
-  </aside>
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 My Online Store</p>
+    </footer>
 
-  <!-- Overlay -->
-  <div id="overlay" class="overlay hidden"></div>
+    <script src="app.js"></script>
+    <script src="script.js"></script>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Sign In</h3>
-        <button class="btn small" id="closeLogin">✕</button>
-      </div>
-      <form id="loginForm" class="modal-body">
-        <label>Email Address
-          <input id="loginEmail" type="email" required />
-        </label>
-        <label>Password
-          <input id="loginPassword" type="password" required />
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="btn primary">Sign In</button>
-          <button type="button" class="btn" id="openSignupFromLogin">Create Account</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Signup Modal -->
-  <div id="signupModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Create Account</h3>
-        <button class="btn small" id="closeSignup">✕</button>
-      </div>
-      <form id="signupForm" class="modal-body">
-        <label>Full Name
-          <input id="signupName" type="text" required />
-        </label>
-        <label>Email Address
-          <input id="signupEmail" type="email" required />
-        </label>
-        <label>Password
-          <input id="signupPassword" type="password" required minlength="6" />
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="btn primary">Create Account</button>
-          <button type="button" class="btn" id="openLoginFromSignup">Sign In</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Categories Modal (mobile) -->
-  <div id="categoriesModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Categories</h3>
-        <button id="closeCategoriesModal" class="btn small">Close</button>
-      </div>
-      <div class="modal-body">
-        <button class="category-filter btn" data-category="all">All</button>
-        <button class="category-filter btn" data-category="electronics">Electronics</button>
-        <button class="category-filter btn" data-category="fitness">Fitness</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- User Modal (account details) -->
-  <div id="userModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Account</h3>
-        <button id="closeUserModal" class="btn small">✕</button>
-      </div>
-      <div class="modal-body">
-        <div id="userInfo" class="user-info hidden">
-          <div class="avatar" id="userInitial"></div>
-          <div>
-            <div id="userName" class="user-name"></div>
-            <div id="userEmail" class="user-email muted"></div>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button id="logoutBtn" class="btn">Sign Out</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom navigation (mobile) -->
-  <nav class="bottom-nav glass-tabbar">
-    <a id="mobileHomeBtn" class="tab-item active"><span>Home</span></a>
-    <a id="mobileCategoriesBtn" class="tab-item"><span>Categories</span></a>
-    <a id="mobileCartBtn" class="tab-item"><span>Cart</span></a>
-    <a id="mobileAccountBtn" class="tab-item"><span>Account</span></a>
-  </nav>
-
-  <script src="main.js" defer></script>
 </body>
 </html>
