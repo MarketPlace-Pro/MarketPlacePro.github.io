@@ -35,6 +35,145 @@ let currentProducts = [...products];
 let cart = [];
 let wishlist = [];
 
+// Add this with your other global state variables at the top
+let currentUser = null;
+let users = JSON.parse(localStorage.getItem('marketplace_users')) || [];
+
+// Add these new functions to your existing code
+function setupAuthEventListeners() {
+    // Open login modal when clicking account buttons
+    document.querySelectorAll('[id*="Account"], [id*="userBtn"]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginModal();
+        });
+    });
+
+    // Modal switching
+    document.querySelectorAll('.switch-to-signup').forEach(btn => {
+        btn.addEventListener('click', showSignupModal);
+    });
+
+    document.querySelectorAll('.switch-to-login').forEach(btn => {
+        btn.addEventListener('click', showLoginModal);
+    });
+
+    // Close buttons
+    document.querySelectorAll('.close-login-modal, .close-signup-modal').forEach(btn => {
+        btn.addEventListener('click', closeAuthModals);
+    });
+
+    // Form submissions
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('signupForm').addEventListener('submit', handleSignup);
+}
+
+function showLoginModal() {
+    closeAllModals();
+    document.getElementById('loginModal').classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+}
+
+function showSignupModal() {
+    closeAllModals();
+    document.getElementById('signupModal').classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+}
+
+function closeAuthModals() {
+    document.getElementById('loginModal').classList.add('hidden');
+    document.getElementById('signupModal').classList.add('hidden');
+    document.getElementById('overlay').classList.add('hidden');
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        localStorage.setItem('marketplace_current_user', JSON.stringify(user));
+        closeAuthModals();
+        updateUIForAuth();
+        showToast('Welcome back!');
+    } else {
+        showToast('Invalid email or password');
+    }
+}
+
+function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    if (users.some(u => u.email === email)) {
+        showToast('Email already exists');
+        return;
+    }
+
+    const newUser = {
+        id: Date.now(),
+        name,
+        email,
+        password,
+        joined: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    localStorage.setItem('marketplace_users', JSON.stringify(users));
+    
+    currentUser = newUser;
+    localStorage.setItem('marketplace_current_user', JSON.stringify(newUser));
+    
+    closeAuthModals();
+    updateUIForAuth();
+    showToast('Account created successfully!');
+}
+
+function updateUIForAuth() {
+    const accountButtons = document.querySelectorAll('[id*="Account"], [id*="userBtn"]');
+    if (currentUser) {
+        accountButtons.forEach(btn => {
+            const textSpan = btn.querySelector('span');
+            if (textSpan) {
+                textSpan.textContent = currentUser.name.split(' ')[0];
+            }
+        });
+        showToast(`Welcome, ${currentUser.name.split(' ')[0]}!`);
+    }
+}
+
+function checkExistingAuth() {
+    const savedUser = localStorage.getItem('marketplace_current_user');
+    if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        updateUIForAuth();
+    }
+}
+
+// Update your existing initialize function to include auth
+document.addEventListener('DOMContentLoaded', function() {
+    renderProducts();
+    setupEventListeners();
+    setupAuthEventListeners(); // Add this line
+    updateCartCounts();
+    checkExistingAuth(); // Add this line
+});
+
+// Update your closeAllModals function to include auth modals
+function closeAllModals() {
+    cartSidebar.classList.add('translate-x-full');
+    userModal.classList.add('hidden');
+    categoriesModal.classList.add('hidden');
+    document.getElementById('loginModal').classList.add('hidden');
+    document.getElementById('signupModal').classList.add('hidden');
+    overlay.classList.add('hidden');
+}
+
 // DOM Elements
 const productsContainer = document.getElementById('productsContainer');
 const cartSidebar = document.getElementById('cartSidebar');
