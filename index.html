@@ -475,5 +475,54 @@
         </div>
     </div>
 </div>
+
+<!-- User Account Modal -->
+<div id="userModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Account</h2>
+                <button id="closeUserModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">✕</button>
+            </div>
+            
+            <div id="userInfo" class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hidden">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-lg" id="userInitial">U</span>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold" id="userName">User Name</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" id="userEmail">user@email.com</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="authButtons" class="space-y-3">
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors login-btn">
+                    Sign In
+                </button>
+                <button class="w-full border border-gray-300 dark:border-gray-600 py-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors signup-btn">
+                    Create Account
+                </button>
+            </div>
+
+            <div id="userMenu" class="space-y-4 hidden">
+                <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                    <i class="fas fa-user mr-3"></i>My Profile
+                </button>
+                <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                    <i class="fas fa-box mr-3"></i>My Orders
+                </button>
+                <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                    <i class="fas fa-cog mr-3"></i>Settings
+                </button>
+                <hr class="border-gray-200 dark:border-gray-700">
+                <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-red-600 logout-btn">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
