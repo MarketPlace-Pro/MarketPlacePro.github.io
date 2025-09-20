@@ -1,411 +1,433 @@
+/* main.js - MarketPlace Pro (vanilla JS)
+   - Auth (signup/login/logout) with localStorage
+   - Products render, category filter
+   - Cart sidebar (add/remove/update)
+   - Toast notifications
+*/
+
+// ---------------------------
 // Sample product data
+// ---------------------------
 const products = [
-    {
-        id: 1,
-        name: "Wireless Bluetooth Headphones",
-        category: "electronics",
-        price: 79.99,
-        originalPrice: 99.99,
-        rating: 4.5,
-        reviews: 1234,
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVDMTI0LjMgNzUgMTAzIDk2LjMgMTAzIDEyMlYxNzhDMTAzIDIwMy43IDEyNC4zIDIyNSAxNTAgMjI1UzE5NyAyMDMuNyAxOTcgMTc4VjEyMkMxOTcgOTYuMyAxNzUuNyA3NSAxNTAgNzVaIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEzMCIgY3k9IjE0MCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPGV0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIzIiBkPSJNMTE1IDEyNUgxODUiLz4KPC9zdmc+",
-        description: "Premium wireless headphones with noise cancellation and 30-hour battery life.",
-        seller: "TechStore Pro",
-        shipping: "Free",
-        inStock: true
-    },
-    {
-        id: 2,
-        name: "Smart Fitness Watch",
-        category: "electronics",
-        price: 199.99,
-        originalPrice: 249.99,
-        rating: 4.7,
-        reviews: 856,
-        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
-        description: "Advanced fitness tracking with heart rate monitor and GPS.",
-        seller: "FitTech Solutions",
-        shipping: "Free",
-        inStock: true
-    }
+  {
+    id: 1,
+    name: "Wireless Bluetooth Headphones",
+    category: "electronics",
+    price: 79.99,
+    originalPrice: 99.99,
+    rating: 4.5,
+    reviews: 1234,
+    image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVDMTI0LjMgNzUgMTAzIDk2LjMgMTAzIDEyMlYxNzhDMTAzIDIwMy43IDEyNC4zIDIyNSAxNTAgMjI1UzE5NyAyMDMuNyAxOTcgMTc4VjEyMkMxOTcgOTYuMyAxNzUuNyA3NSAxNTAgNzVaIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEzMCIgY3k9IjE0MCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPGV0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIzIiBkPSJNMTE1IDEyNUgxODUiLz4KPC9zdmc+",
+    description: "Premium wireless headphones with noise cancellation and 30-hour battery life.",
+    seller: "TechStore Pro",
+    shipping: "Free",
+    inStock: true
+  },
+  {
+    id: 2,
+    name: "Smart Fitness Watch",
+    category: "fitness",
+    price: 199.99,
+    originalPrice: 249.99,
+    rating: 4.7,
+    reviews: 856,
+    image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
+    description: "Advanced fitness tracking with heart rate monitor and GPS.",
+    seller: "FitTech Solutions",
+    shipping: "Free",
+    inStock: true
+  }
 ];
 
+// ---------------------------
 // Global state
+// ---------------------------
 let currentProducts = [...products];
-let cart = [];
-let wishlist = [];
-
-// Add this with your other global state variables at the top
-let currentUser = null;
+let cart = JSON.parse(localStorage.getItem('marketplace_cart')) || [];
+let currentUser = JSON.parse(localStorage.getItem('marketplace_current_user')) || null;
 let users = JSON.parse(localStorage.getItem('marketplace_users')) || [];
 
-// Add these new functions to your existing code
-function setupAuthEventListeners() {
-    // Open login modal when clicking account buttons
-    document.querySelectorAll('[id*="Account"], [id*="userBtn"]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showLoginModal();
-        });
-    });
+// ---------------------------
+// DOM elements
+// ---------------------------
+const productsContainer = document.getElementById('productsContainer');
+const cartSidebar = document.getElementById('cartSidebar');
+const cartItemsEl = document.getElementById('cartItems');
+const cartCountEl = document.getElementById('cartCount');
+const cartTotalEl = document.getElementById('cartTotal');
+const overlay = document.getElementById('overlay');
 
-    // Modal switching
-    document.querySelectorAll('.switch-to-signup').forEach(btn => {
-        btn.addEventListener('click', showSignupModal);
-    });
+const loginModal = document.getElementById('loginModal');
+const signupModal = document.getElementById('signupModal');
+const userModal = document.getElementById('userModal');
+const categoriesModal = document.getElementById('categoriesModal');
 
-    document.querySelectorAll('.switch-to-login').forEach(btn => {
-        btn.addEventListener('click', showLoginModal);
-    });
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
 
-    // Close buttons
-    document.querySelectorAll('.close-login-modal, .close-signup-modal').forEach(btn => {
-        btn.addEventListener('click', closeAuthModals);
-    });
+const userBtn = document.getElementById('userBtn');
+const openCartBtn = document.getElementById('openCartBtn');
+const openLoginFromSignup = document.getElementById('openLoginFromSignup');
+const openSignupFromLogin = document.getElementById('openSignupFromLogin');
 
-    // Form submissions
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
-    document.getElementById('signupForm').addEventListener('submit', handleSignup);
+// ---------------------------
+// Utility: Toast
+// ---------------------------
+function showToast(message, duration = 3000) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration);
 }
 
-function showLoginModal() {
-    closeAllModals();
-    document.getElementById('loginModal').classList.remove('hidden');
-    document.getElementById('overlay').classList.remove('hidden');
-}
+// ---------------------------
+// Auth (signup / login / logout)
+// ---------------------------
+function handleSignup(e) {
+  e.preventDefault();
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signupPassword').value;
 
-function showSignupModal() {
-    closeAllModals();
-    document.getElementById('signupModal').classList.remove('hidden');
-    document.getElementById('overlay').classList.remove('hidden');
-}
+  if (!name || !email || !password) return showToast('Please complete all fields');
 
-function closeAuthModals() {
-    document.getElementById('loginModal').classList.add('hidden');
-    document.getElementById('signupModal').classList.add('hidden');
-    document.getElementById('overlay').classList.add('hidden');
+  if (users.find(u => u.email === email)) {
+    return showToast('Email already registered');
+  }
+
+  const newUser = { id: Date.now(), name, email, password };
+  users.push(newUser);
+  localStorage.setItem('marketplace_users', JSON.stringify(users));
+
+  currentUser = newUser;
+  localStorage.setItem('marketplace_current_user', JSON.stringify(currentUser));
+  updateUIForAuth();
+  closeAllModals();
+  showToast(`Welcome, ${currentUser.name.split(' ')[0]}!`);
 }
 
 function handleLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
 
-    const user = users.find(u => u.email === email && u.password === password);
-    
-    if (user) {
-        currentUser = user;
-        localStorage.setItem('marketplace_current_user', JSON.stringify(user));
-        closeAuthModals();
-        updateUIForAuth();
-        showToast('Welcome back!');
-    } else {
-        showToast('Invalid email or password');
-    }
-}
-
-function handleSignup(e) {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-
-    if (users.some(u => u.email === email)) {
-        showToast('Email already exists');
-        return;
-    }
-
-    const newUser = {
-        id: Date.now(),
-        name,
-        email,
-        password,
-        joined: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    localStorage.setItem('marketplace_users', JSON.stringify(users));
-    
-    currentUser = newUser;
-    localStorage.setItem('marketplace_current_user', JSON.stringify(newUser));
-    
-    closeAuthModals();
+  const user = users.find(u => u.email === email && u.password === password);
+  if (user) {
+    currentUser = user;
+    localStorage.setItem('marketplace_current_user', JSON.stringify(currentUser));
     updateUIForAuth();
-    showToast('Account created successfully!');
-}
-
-function updateUIForAuth() {
-    const accountButtons = document.querySelectorAll('[id*="Account"], [id*="userBtn"]');
-    if (currentUser) {
-        accountButtons.forEach(btn => {
-            const textSpan = btn.querySelector('span');
-            if (textSpan) {
-                textSpan.textContent = currentUser.name.split(' ')[0];
-            }
-        });
-        showToast(`Welcome, ${currentUser.name.split(' ')[0]}!`);
-    }
-}
-
-function checkExistingAuth() {
-    const savedUser = localStorage.getItem('marketplace_current_user');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        updateUIForAuth();
-    }
-}
-
-// Update your existing initialize function to include auth
-document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    setupEventListeners();
-    setupAuthEventListeners(); // Add this line
-    updateCartCounts();
-    checkExistingAuth(); // Add this line
-});
-
-// Update your closeAllModals function to include auth modals
-function closeAllModals() {
-    cartSidebar.classList.add('translate-x-full');
-    userModal.classList.add('hidden');
-    categoriesModal.classList.add('hidden');
-    document.getElementById('loginModal').classList.add('hidden');
-    document.getElementById('signupModal').classList.add('hidden');
-    overlay.classList.add('hidden');
-}
-
-// DOM Elements
-const productsContainer = document.getElementById('productsContainer');
-const cartSidebar = document.getElementById('cartSidebar');
-const userModal = document.getElementById('userModal');
-const overlay = document.getElementById('overlay');
-
-// Initialize app
-document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-    setupBottomNavigation();
-    updateCartCounts();
-});
-
-// Render products
-function renderProducts() {
-    const container = productsContainer;
-    container.innerHTML = '';
-    
-    currentProducts.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'bg-white dark:bg-gray-800 p-4 rounded-lg shadow hover:shadow-md transition-shadow';
-        
-        const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-        
-        card.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded mb-4">
-            <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">${product.name}</h3>
-            <div class="flex items-center mb-2">
-                <div class="text-yellow-400">
-                    ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5 - Math.floor(product.rating))}
-                </div>
-                <span class="text-gray-500 text-sm ml-2">(${product.reviews})</span>
-            </div>
-            <div class="flex items-center justify-between mb-3">
-                <span class="text-2xl font-bold text-blue-600">$${product.price}</span>
-                ${product.originalPrice > product.price ? 
-                    `<span class="text-gray-500 line-through text-sm">$${product.originalPrice}</span>` : ''}
-            </div>
-            <button class="add-to-cart-btn w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors" data-id="${product.id}">
-                Add to Cart
-            </button>
-        `;
-        
-        // Add event listener to the button
-        const addButton = card.querySelector('.add-to-cart-btn');
-        addButton.addEventListener('click', function() {
-            addToCart(product.id);
-        });
-        
-        container.appendChild(card);
-    });
-}
-
-// Add to cart function
-function addToCart(productId, quantity = 1) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existingItem = cart.find(item => item.id === productId);
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.push({ ...product, quantity });
-    }
-
-    updateCartCounts();
-    showToast('Product added to cart!');
-}
-
-// Update all cart counts
-function updateCartCounts() {
-    const count = cart.reduce((total, item) => total + item.quantity, 0);
-    
-    // Update header cart count
-    const headerCountElement = document.getElementById('cartCount');
-    if (headerCountElement) {
-        if (count > 0) {
-            headerCountElement.textContent = count;
-            headerCountElement.classList.remove('hidden');
-        } else {
-            headerCountElement.classList.add('hidden');
-        }
-    }
-    
-    // Update mobile cart count
-    const mobileCountElement = document.getElementById('mobileCartCount');
-    if (mobileCountElement) {
-        if (count > 0) {
-            mobileCountElement.textContent = count;
-            mobileCountElement.classList.remove('hidden');
-        } else {
-            mobileCountElement.classList.add('hidden');
-        }
-    }
-}
-
-// Show toast notification
-function showToast(message) {
-    // Create toast if it doesn't exist
-    let toast = document.getElementById('toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'toast';
-        toast.className = 'fixed top-4 right-4 z-60 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300';
-        toast.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-check-circle"></i>
-                <span id="toastMessage">${message}</span>
-            </div>
-        `;
-        document.body.appendChild(toast);
-    }
-    
-    document.getElementById('toastMessage').textContent = message;
-    toast.classList.remove('translate-x-full');
-    
-    setTimeout(() => {
-        toast.classList.add('translate-x-full');
-    }, 3000);
-}
-
-// Bottom Navigation Functionality
-function setupBottomNavigation() {
-    // Home Button - Scroll to top
-    const homeBtn = document.getElementById('mobileHomeBtn');
-    if (homeBtn) {
-        homeBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            closeAllModals();
-        });
-    }
-
-    // Categories Button - Open categories modal
-const categoriesBtn = document.getElementById('mobileCategoriesBtn');
-const categoriesModal = document.getElementById('categoriesModal');
-const closeCategoriesModal = document.getElementById('closeCategoriesModal');
-
-if (categoriesBtn && categoriesModal) {
-    categoriesBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        categoriesModal.classList.remove('hidden');
-    });
-}
-
-if (closeCategoriesModal) {
-    closeCategoriesModal.addEventListener('click', function() {
-        categoriesModal.classList.add('hidden');
-    });
-}
-
-// Category filter functionality
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('category-filter')) {
-        const category = e.target.dataset.category;
-        filterProductsByCategory(category);
-        categoriesModal.classList.add('hidden');
-    }
-});
-
-function filterProductsByCategory(category) {
-    if (category === 'all') {
-        currentProducts = [...products];
-    } else {
-        currentProducts = products.filter(product => product.category === category);
-    }
-    renderProducts();
-    showToast(`Showing ${category} products`);
-}
-
-// Add this function to handle the account modal UI
-function setupAccountModal() {
-    const authButtons = document.getElementById('authButtons');
-    const userMenu = document.getElementById('userMenu');
-    const userInfo = document.getElementById('userInfo');
-    const userName = document.getElementById('userName');
-    const userEmail = document.getElementById('userEmail');
-    const userInitial = document.getElementById('userInitial');
-
-    document.querySelectorAll('.login-btn').forEach(btn => {
-        btn.addEventListener('click', showLoginModal);
-    });
-
-    document.querySelectorAll('.signup-btn').forEach(btn => {
-        btn.addEventListener('click', showSignupModal);
-    });
-
-    document.querySelectorAll('.logout-btn').forEach(btn => {
-        btn.addEventListener('click', handleLogout);
-    });
-
-    // Update modal based on auth state
-    if (currentUser) {
-        authButtons.classList.add('hidden');
-        userMenu.classList.remove('hidden');
-        userInfo.classList.remove('hidden');
-        userName.textContent = currentUser.name;
-        userEmail.textContent = currentUser.email;
-        userInitial.textContent = currentUser.name.charAt(0).toUpperCase();
-    } else {
-        authButtons.classList.remove('hidden');
-        userMenu.classList.add('hidden');
-        userInfo.classList.add('hidden');
-    }
+    closeAllModals();
+    showToast(`Welcome back, ${user.name.split(' ')[0]}!`);
+  } else {
+    showToast('Invalid email or password');
+  }
 }
 
 function handleLogout() {
-    currentUser = null;
-    localStorage.removeItem('marketplace_current_user');
-    closeAllModals();
-    updateUIForAuth();
-    showToast('Signed out successfully');
+  currentUser = null;
+  localStorage.removeItem('marketplace_current_user');
+  updateUIForAuth();
+  closeAllModals();
+  showToast('Signed out successfully');
 }
 
-// Update your updateUIForAuth function to also update the modal
+// ---------------------------
+// Update UI for auth state
+// ---------------------------
 function updateUIForAuth() {
-    const accountButtons = document.querySelectorAll('[id*="Account"], [id*="userBtn"]');
-    if (currentUser) {
-        accountButtons.forEach(btn => {
-            const textSpan = btn.querySelector('span');
-            if (textSpan) {
-                textSpan.textContent = currentUser.name.split(' ')[0];
-            }
-        });
-        showToast(`Welcome, ${currentUser.name.split(' ')[0]}!`);
-    } else {
-        accountButtons.forEach(btn => {
-            const textSpan = btn.querySelector('span');
-            if (textSpan) {
-                textSpan.textContent = 'Account';
-            }
-        });
+  const accountButtons = document.querySelectorAll('[id*="Account"], [id*="userBtn"], #mobileAccountBtn');
+  accountButtons.forEach(btn => {
+    const span = btn.querySelector('span');
+    if (span) {
+      span.textContent = currentUser ? currentUser.name.split(' ')[0] : 'Account';
     }
-    setupAccountModal(); // Update the modal UI
+  });
+
+  // Update user modal content
+  const userInfo = document.getElementById('userInfo');
+  const userName = document.getElementById('userName');
+  const userEmail = document.getElementById('userEmail');
+  const userInitial = document.getElementById('userInitial');
+
+  if (currentUser) {
+    if (userInfo) userInfo.classList.remove('hidden');
+    if (userName) userName.textContent = currentUser.name;
+    if (userEmail) userEmail.textContent = currentUser.email;
+    if (userInitial) userInitial.textContent = currentUser.name.split(' ')[0].slice(0, 1).toUpperCase();
+  } else {
+    if (userInfo) userInfo.classList.add('hidden');
+    if (userName) userName.textContent = '';
+    if (userEmail) userEmail.textContent = '';
+    if (userInitial) userInitial.textContent = '';
+  }
 }
+
+// ---------------------------
+// Modal helpers
+// ---------------------------
+function closeAllModals() {
+  [loginModal, signupModal, userModal, categoriesModal].forEach(m => {
+    if (m) m.classList.add('hidden');
+  });
+  if (cartSidebar) cartSidebar.classList.add('translate-x-full');
+  overlay.classList.add('hidden');
+}
+
+function showLoginModal() {
+  closeAllModals();
+  loginModal.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+}
+
+function showSignupModal() {
+  closeAllModals();
+  signupModal.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+}
+
+function showUserModal() {
+  closeAllModals();
+  userModal.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+}
+
+function showCartSidebar() {
+  closeAllModals();
+  cartSidebar.classList.remove('translate-x-full');
+  overlay.classList.remove('hidden');
+}
+
+// ---------------------------
+// Render products
+// ---------------------------
+function renderProducts() {
+  productsContainer.innerHTML = '';
+  if (!currentProducts.length) {
+    productsContainer.innerHTML = '<p class="muted">No products found.</p>';
+    return;
+  }
+
+  currentProducts.forEach(product => {
+    const card = document.createElement('div');
+    card.className = 'product-card glass';
+    card.innerHTML = `
+      <img class="product-image" src="${product.image}" alt="${escapeHtml(product.name)}" />
+      <div class="product-body">
+        <h4 class="product-title line-clamp-2">${escapeHtml(product.name)}</h4>
+        <p class="muted seller">${escapeHtml(product.seller)}</p>
+        <p class="muted small">${escapeHtml(product.description)}</p>
+        <div class="product-meta">
+          <div class="price">
+            <strong>$${product.price.toFixed(2)}</strong>
+            <small class="muted original">${product.originalPrice ? `$${product.originalPrice.toFixed(2)}` : ''}</small>
+          </div>
+          <div class="actions">
+            <button class="btn small" data-add="${product.id}">Add</button>
+            <button class="btn outline small" data-wishlist="${product.id}">❤</button>
+          </div>
+        </div>
+      </div>
+    `;
+    productsContainer.appendChild(card);
+  });
+}
+
+// escape HTML utility (simple)
+function escapeHtml(str = '') {
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+// ---------------------------
+// Cart functions
+// ---------------------------
+function saveCart() {
+  localStorage.setItem('marketplace_cart', JSON.stringify(cart));
+}
+
+function updateCartCounts() {
+  const count = cart.reduce((t, i) => t + i.quantity, 0);
+  cartCountEl.textContent = count;
+  if (document.getElementById('cartCountBadge')) {
+    document.getElementById('cartCountBadge').textContent = count;
+  }
+  renderCartItems();
+}
+
+function addToCart(productId, qty = 1) {
+  const product = products.find(p => p.id === productId);
+  if (!product) return showToast('Product not found');
+  const existing = cart.find(i => i.id === productId);
+  if (existing) existing.quantity += qty;
+  else cart.push({ id: product.id, name: product.name, price: product.price, quantity: qty });
+  saveCart();
+  updateCartCounts();
+  showToast(`${product.name} added to cart`);
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(i => i.id !== productId);
+  saveCart();
+  updateCartCounts();
+  showToast('Removed from cart');
+}
+
+function changeQuantity(productId, delta) {
+  const item = cart.find(i => i.id === productId);
+  if (!item) return;
+  item.quantity += delta;
+  if (item.quantity <= 0) removeFromCart(productId);
+  else {
+    saveCart();
+    updateCartCounts();
+  }
+}
+
+function renderCartItems() {
+  cartItemsEl.innerHTML = '';
+  if (!cart.length) {
+    cartItemsEl.innerHTML = '<div class="muted">Your cart is empty.</div>';
+    cartTotalEl.textContent = 'Total: $0.00';
+    return;
+  }
+
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price * item.quantity;
+    const row = document.createElement('div');
+    row.className = 'cart-row';
+    row.innerHTML = `
+      <div class="cart-row-left">
+        <div class="cart-name">${escapeHtml(item.name)}</div>
+        <div class="muted small">$${item.price.toFixed(2)} x ${item.quantity}</div>
+      </div>
+      <div class="cart-row-actions">
+        <button class="btn tiny" data-decrease="${item.id}">−</button>
+        <button class="btn tiny" data-increase="${item.id}">+</button>
+        <button class="btn tiny danger" data-remove="${item.id}">✕</button>
+      </div>
+    `;
+    cartItemsEl.appendChild(row);
+  });
+
+  cartTotalEl.textContent = `Total: $${total.toFixed(2)}`;
+}
+
+// ---------------------------
+// Category filter
+// ---------------------------
+function filterProductsByCategory(category) {
+  if (!category || category === 'all') currentProducts = [...products];
+  else currentProducts = products.filter(p => p.category === category);
+  renderProducts();
+  showToast(`Showing ${category} products`);
+}
+
+// ---------------------------
+// Event listeners (setup)
+// ---------------------------
+function setupEventListeners() {
+  // Forms
+  if (signupForm) signupForm.addEventListener('submit', handleSignup);
+  if (loginForm) loginForm.addEventListener('submit', handleLogin);
+
+  // Modal open/close
+  document.getElementById('closeLogin').addEventListener('click', closeAllModals);
+  document.getElementById('closeSignup').addEventListener('click', closeAllModals);
+  document.getElementById('closeUserModal').addEventListener('click', closeAllModals);
+  document.getElementById('closeCategoriesModal').addEventListener('click', () => categoriesModal.classList.add('hidden'));
+
+  // Open switch between login/signup
+  if (openSignupFromLogin) openSignupFromLogin.addEventListener('click', showSignupModal);
+  if (openLoginFromSignup) openLoginFromSignup.addEventListener('click', showLoginModal);
+
+  // Account / User button
+  userBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (currentUser) showUserModal();
+    else showLoginModal();
+  });
+
+  // Cart open/close
+  openCartBtn.addEventListener('click', (e) => { e.preventDefault(); showCartSidebar(); });
+  document.getElementById('closeCartBtn').addEventListener('click', closeAllModals);
+
+  // Bottom nav
+  document.getElementById('mobileHomeBtn').addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+  document.getElementById('mobileCategoriesBtn').addEventListener('click', () => { categoriesModal.classList.remove('hidden'); overlay.classList.remove('hidden'); });
+  document.getElementById('mobileCartBtn').addEventListener('click', showCartSidebar);
+  document.getElementById('mobileAccountBtn').addEventListener('click', () => currentUser ? showUserModal() : showLoginModal());
+
+  // Overlay click closes modals
+  overlay.addEventListener('click', closeAllModals);
+
+  // Product add / wishlist (delegated)
+  productsContainer.addEventListener('click', (e) => {
+    const add = e.target.closest('[data-add]');
+    if (add) {
+      const id = Number(add.getAttribute('data-add'));
+      addToCart(id, 1);
+      return;
+    }
+    const wish = e.target.closest('[data-wishlist]');
+    if (wish) {
+      const id = Number(wish.getAttribute('data-wishlist'));
+      showToast('Added to wishlist (demo)');
+      return;
+    }
+  });
+
+  // Cart actions (delegated)
+  cartItemsEl.addEventListener('click', (e) => {
+    const rm = e.target.closest('[data-remove]');
+    if (rm) { removeFromCart(Number(rm.getAttribute('data-remove'))); return; }
+    const inc = e.target.closest('[data-increase]');
+    if (inc) { changeQuantity(Number(inc.getAttribute('data-increase')), +1); return; }
+    const dec = e.target.closest('[data-decrease]');
+    if (dec) { changeQuantity(Number(dec.getAttribute('data-decrease')), -1); return; }
+  });
+
+  // Category filter delegate
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('category-filter')) {
+      const category = e.target.dataset.category;
+      filterProductsByCategory(category);
+      categoriesModal.classList.add('hidden');
+    }
+  });
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+  // Checkout - demo
+  document.getElementById('checkoutBtn').addEventListener('click', () => {
+    if (!cart.length) return showToast('Cart is empty');
+    if (!currentUser) {
+      showLoginModal();
+      return showToast('Please sign in to checkout');
+    }
+    // demo: clear cart
+    cart = [];
+    saveCart();
+    updateCartCounts();
+    closeAllModals();
+    showToast('Checkout complete — demo');
+  });
+}
+
+// ---------------------------
+// Initialize app
+// ---------------------------
+function init() {
+  renderProducts();
+  setupEventListeners();
+  updateCartCounts();
+  updateUIForAuth();
+}
+
+document.addEventListener('DOMContentLoaded', init);
