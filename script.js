@@ -204,3 +204,69 @@ function filterProductsByCategory(category) {
     renderProducts();
     showToast(`Showing ${category} products`);
 }
+
+// Add this function to handle the account modal UI
+function setupAccountModal() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    const userInfo = document.getElementById('userInfo');
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
+    const userInitial = document.getElementById('userInitial');
+
+    document.querySelectorAll('.login-btn').forEach(btn => {
+        btn.addEventListener('click', showLoginModal);
+    });
+
+    document.querySelectorAll('.signup-btn').forEach(btn => {
+        btn.addEventListener('click', showSignupModal);
+    });
+
+    document.querySelectorAll('.logout-btn').forEach(btn => {
+        btn.addEventListener('click', handleLogout);
+    });
+
+    // Update modal based on auth state
+    if (currentUser) {
+        authButtons.classList.add('hidden');
+        userMenu.classList.remove('hidden');
+        userInfo.classList.remove('hidden');
+        userName.textContent = currentUser.name;
+        userEmail.textContent = currentUser.email;
+        userInitial.textContent = currentUser.name.charAt(0).toUpperCase();
+    } else {
+        authButtons.classList.remove('hidden');
+        userMenu.classList.add('hidden');
+        userInfo.classList.add('hidden');
+    }
+}
+
+function handleLogout() {
+    currentUser = null;
+    localStorage.removeItem('marketplace_current_user');
+    closeAllModals();
+    updateUIForAuth();
+    showToast('Signed out successfully');
+}
+
+// Update your updateUIForAuth function to also update the modal
+function updateUIForAuth() {
+    const accountButtons = document.querySelectorAll('[id*="Account"], [id*="userBtn"]');
+    if (currentUser) {
+        accountButtons.forEach(btn => {
+            const textSpan = btn.querySelector('span');
+            if (textSpan) {
+                textSpan.textContent = currentUser.name.split(' ')[0];
+            }
+        });
+        showToast(`Welcome, ${currentUser.name.split(' ')[0]}!`);
+    } else {
+        accountButtons.forEach(btn => {
+            const textSpan = btn.querySelector('span');
+            if (textSpan) {
+                textSpan.textContent = 'Account';
+            }
+        });
+    }
+    setupAccountModal(); // Update the modal UI
+}
