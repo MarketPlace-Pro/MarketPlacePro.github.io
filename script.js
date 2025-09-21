@@ -7,39 +7,63 @@
    - Toast notifications
 */
 
-///// ---------- Sample product data ----------
-const products = [
-  {
-    id: 1,
-    name: "Wireless Bluetooth Headphones",
-    category: "electronics",
-    price: 79.99,
-    originalPrice: 99.99,
-    rating: 4.5,
-    reviews: 1234,
-    image:
-      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVDMTI0LjMgNzUgMTAzIDk2LjMgMTAzIDEyMlYxNzhDMTAzIDIwMy43IDEyNC4zIDIyNSAxNTAgMjI1UzE5NyAyMDMuNyAxOTcgMTc4VjEyMkMxOTcgOTYuMyAxNzUuNyA3NSAxNTAgNzVaIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEzMCIgY3k9IjE0MCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPGV0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIzIiBkPSJNMTE1IDEyNUgxODUiLz4KPC9zdmc+",
-    description: "Premium wireless headphones with noise cancellation and 30-hour battery life.",
-    seller: "TechStore Pro",
-    shipping: "Free",
-    inStock: true
-  },
-  {
-    id: 2,
-    name: "Smart Fitness Watch",
-    category: "fitness",
-    price: 199.99,
-    originalPrice: 249.99,
-    rating: 4.7,
-    reviews: 856,
-    image:
-      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
-    description: "Advanced fitness tracking with heart rate monitor and GPS.",
-    seller: "FitTech Solutions",
-    shipping: "Free",
-    inStock: true
+///// ///// ---------- Sample product data ----------
+// ASYNC FUNCTION TO LOAD PRODUCTS FROM BACKEND OR USE LOCAL DATA
+async function loadProducts() {
+  const backendUrl = 'https://your-backend-url.onrender.com/api/products'; // WE WILL UPDATE THIS LATER
+
+  try {
+    console.log("🔄 Trying to fetch products from backend...");
+    const response = await fetch(backendUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Backend returned status: ${response.status}`);
+    }
+    
+    const productsFromBackend = await response.json();
+    console.log("✅ Successfully loaded products from backend!");
+    return productsFromBackend;
+
+  } catch (error) {
+    console.error("❌ Backend offline or error:", error.message);
+    console.log("🔄 Using local product data instead...");
+    
+    // RETURN LOCAL PRODUCT DATA AS FALLBACK
+    return [
+      {
+        id: 1,
+        name: "Wireless Bluetooth Headphones",
+        category: "electronics",
+        price: 79.99,
+        originalPrice: 99.99,
+        rating: 4.5,
+        reviews: 1234,
+        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVDMTI0LjMgNzUgMTAzIDk2LjMgMTAzIDEyMlYxNzhDMTAzIDIwMy43IDEyNC4zIDIyNSAxNTAgMjI1UzE5NyAyMDMuNyAxOTcgMTc4VjEyMkMxOTcgOTYuMyAxNzUuNyA3NSAxNTAgNzVaIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEzMCIgY3k9IjE0MCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPGV0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIzIiBkPSJNMTE1IDEyNUgxODUiLz4KPC9zdmc+",
+        description: "Premium wireless headphones with noise cancellation and 30-hour battery life.",
+        seller: "TechStore Pro",
+        shipping: "Free",
+        inStock: true
+      },
+      {
+        id: 2,
+        name: "Smart Fitness Watch",
+        category: "fitness",
+        price: 199.99,
+        originalPrice: 249.99,
+        rating: 4.7,
+        reviews: 856,
+        image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
+        description: "Advanced fitness tracking with heart rate monitor and GPS.",
+        seller: "FitTech Solutions",
+        shipping: "Free",
+        inStock: true
+      }
+    ];
   }
-];
+}
+
+let currentProducts = [];
+let products = []; // This will be set by loadProducts()
 
 ///// ---------- Global state ----------
 let currentProducts = [...products];
