@@ -261,6 +261,11 @@ function renderProducts() {
 
   renderPagination();
 }
+function renderProducts() {
+  const container = productsContainer;
+  container.innerHTML = '';
+  // ... rest of the function ...
+}
 
 ///// ---------- Pagination ----------
 function renderPagination() {
