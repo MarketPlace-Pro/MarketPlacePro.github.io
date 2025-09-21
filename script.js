@@ -470,3 +470,23 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Replace your 'const products = [...]' array with this:
+async function loadProducts() {
+  try {
+    // This URL will be your Render backend tomorrow
+    const response = await fetch('https://your-backend.onrender.com/api/products');
+    const products = await response.json();
+    return products;
+  } catch (error) {
+    // If the backend is down, use the hardcoded data for now
+    console.error("Backend offline, using local data");
+    return [...]; // Paste your old products array here
+  }
+}
+
+// Then update your renderProducts function to use this:
+async function renderProducts() {
+  const products = await loadProducts();
+  // ... the rest of your code to display them
+}
