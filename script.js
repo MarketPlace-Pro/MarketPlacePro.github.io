@@ -66,7 +66,6 @@ let currentProducts = [];
 let products = []; // This will be set by loadProducts()
 
 ///// ---------- Global state ----------
-let currentProducts = [...products];
 let cart = JSON.parse(localStorage.getItem('marketplace_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('marketplace_wishlist')) || [];
 let currentUser = JSON.parse(localStorage.getItem('marketplace_current_user')) || null;
@@ -221,7 +220,10 @@ function escapeHtml(str = '') {
   return String(str).replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
 }
 
-function renderProducts() {
+async function renderProducts() {
+  // CRITICAL LINE: Load products from backend or use local fallback
+  currentProducts = await loadProducts();
+  
   const container = productsContainer;
   container.innerHTML = '';
 
@@ -260,11 +262,6 @@ function renderProducts() {
   });
 
   renderPagination();
-}
-async function renderProducts() {
-  const container = productsContainer;
-  container.innerHTML = '';
-  // ... rest of the function ...
 }
 
 ///// ---------- Pagination ----------
@@ -499,23 +496,3 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
-// Replace your 'const products = [...]' array with this:
-async function loadProducts() {
-  try {
-    // This URL will be your Render backend tomorrow
-    const response = await fetch('https://your-backend.onrender.com/api/products');
-    const products = await response.json();
-    return products;
-  } catch (error) {
-    // If the backend is down, use the hardcoded data for now
-    console.error("Backend offline, using local data");
-    return [...]; // Paste your old products array here
-  }
-}
-
-// Then update your renderProducts function to use this:
-async function renderProducts() {
-  const products = await loadProducts();
-  // ... the rest of your code to display them
-}
