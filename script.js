@@ -261,7 +261,7 @@ function renderProducts() {
 
   renderPagination();
 }
-function renderProducts() {
+async function renderProducts() {
   const container = productsContainer;
   container.innerHTML = '';
   // ... rest of the function ...
