@@ -69,3 +69,72 @@ body { background: linear-gradient(180deg,#f7f8fc,#ffffff); color: #111827; min-
 
 /* tiny pagination btn tweak */
 .pagination .btn { min-width:46px; }
+
+/* Global background - blue & purple gradient */
+body {
+  background: linear-gradient(135deg, #4f46e5, #9333ea); /* Indigo → Purple */
+  color: #fff; /* Make text white for contrast */
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* Glass containers still look great on dark background */
+.glass {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Cards / product items */
+.product-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.product-meta {
+  color: #e5e7eb;
+}
+
+/* Cart sidebar with glass look */
+.cart-sidebar {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: -20px 12px 40px rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+/* Buttons - make them pop */
+.btn.primary {
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  color: white;
+}
+
+.btn.outline {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.btn.danger {
+  color: #fca5a5;
+}
+
+/* Pagination buttons */
+#pagination button {
+  margin: 0 4px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+#pagination button.primary {
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+}
+
+/* Bottom nav glass look */
+.bottom-nav {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
