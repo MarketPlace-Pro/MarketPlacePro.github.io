@@ -1,123 +1,153 @@
-// Dummy products data (this would come from a database in a real app)
-const products = [
-    { id: 1, name: "Product 1", price: 20, description: "Description for product 1" },
-    { id: 2, name: "Product 2", price: 30, description: "Description for product 2" },
-    { id: 3, name: "Product 3", price: 40, description: "Description for product 3" },
-    { id: 4, name: "Product 4", price: 50, description: "Description for product 4" },
-    { id: 5, name: "Product 5", price: 60, description: "Description for product 5" },
-    { id: 6, name: "Product 6", price: 70, description: "Description for product 6" },
-    { id: 7, name: "Product 7", price: 80, description: "Description for product 7" },
-    { id: 8, name: "Product 8", price: 90, description: "Description for product 8" },
-    { id: 9, name: "Product 9", price: 100, description: "Description for product 9" },
-    { id: 10, name: "Product 10", price: 110, description: "Description for product 10" }
-];
+// =============================
+// app.js - Extra Features
+// =============================
 
-// Load cart from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+// --- Global State (shared with script.js) ---
+let currentPage = 1;
+const productsPerPage = 6;
 
-// Function to render products
-function renderProducts(page = 1, itemsPerPage = 4) {
-    const startIndex = (page - 1) * itemsPerPage;
-    const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
+// --- DOM Elements ---
+const searchInput = document.getElementById("searchInput");
+const paginationContainer = document.getElementById("pagination");
+const cartContainer = document.getElementById("cartSidebar");
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
 
-    const productContainer = document.getElementById("product-container");
-    productContainer.innerHTML = "";  // Clear previous products
+// =============================
+// PRODUCT PAGINATION
+// =============================
+function paginateProducts() {
+  const start = (currentPage - 1) * productsPerPage;
+  const end = start + productsPerPage;
+  const paginated = currentProducts.slice(start, end);
+  renderProducts(paginated);
+  renderPagination();
+}
 
-    paginatedProducts.forEach(product => {
-        const productElement = document.createElement("div");
-        productElement.classList.add("product-card");
-        productElement.innerHTML = `
-            <img src="https://via.placeholder.com/300" alt="${product.name}" class="product-image">
-            <div class="product-body">
-                <h3 class="product-title">${product.name}</h3>
-                <p class="line-clamp-2">${product.description}</p>
-                <div class="product-meta">
-                    <span>$${product.price}</span>
-                    <button onclick="addToCart(${product.id})" class="btn primary small">Add to Cart</button>
-                </div>
-            </div>
-        `;
-        productContainer.appendChild(productElement);
+function renderPagination() {
+  if (!paginationContainer) return;
+  paginationContainer.innerHTML = "";
+
+  const totalPages = Math.ceil(currentProducts.length / productsPerPage);
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `btn small ${i === currentPage ? "primary" : "outline"}`;
+    btn.addEventListener("click", () => {
+      currentPage = i;
+      paginateProducts();
     });
+    paginationContainer.appendChild(btn);
+  }
 }
 
-// Function to handle pagination
-function renderPagination(page = 1, itemsPerPage = 4) {
-    const totalPages = Math.ceil(products.length / itemsPerPage);
-    const paginationElement = document.getElementById("pagination");
-    paginationElement.innerHTML = "";  // Clear previous pagination
-
-    for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement("button");
-        pageButton.textContent = i;
-        pageButton.classList.add("btn", "tiny", "outline");
-        pageButton.onclick = () => {
-            renderProducts(i);
-            renderPagination(i);
-        };
-        paginationElement.appendChild(pageButton);
-    }
+// =============================
+// PRODUCT SEARCH
+// =============================
+if (searchInput) {
+  searchInput.addEventListener("input", (e) => {
+    const term = e.target.value.toLowerCase();
+    currentProducts = products.filter((p) =>
+      p.name.toLowerCase().includes(term)
+    );
+    currentPage = 1;
+    paginateProducts();
+  });
 }
 
-// Cart handling
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    if (product) {
-        cart.push(product);
-        localStorage.setItem('cart', JSON.stringify(cart));  // Store updated cart in localStorage
-        renderCart();
-    }
+// =============================
+// CART FUNCTIONALITY
+// =============================
+function addToCart(productId, quantity = 1) {
+  const product = products.find((p) => p.id === productId);
+  if (!product) return;
+
+  const existing = cart.find((item) => item.id === productId);
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({ ...product, quantity });
+  }
+  updateCartUI();
+  showToast(`${product.name} added to cart!`);
 }
 
-function renderCart() {
-    const cartItemsElement = document.getElementById("cart-items");
-    cartItemsElement.innerHTML = "";
+function removeFromCart(productId) {
+  cart = cart.filter((item) => item.id !== productId);
+  updateCartUI();
+}
 
-    cart.forEach(item => {
-        const cartItemElement = document.createElement("div");
-        cartItemElement.classList.add("cart-row");
-        cartItemElement.innerHTML = `
-            <span>${item.name}</span>
-            <span>$${item.price}</span>
-        `;
-        cartItemsElement.appendChild(cartItemElement);
+function updateCartUI() {
+  if (!cartContainer) return;
+  const itemsContainer = cartContainer.querySelector(".cart-items");
+  if (!itemsContainer) return;
+
+  itemsContainer.innerHTML = "";
+  cart.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "cart-row";
+    row.innerHTML = `
+      <span>${item.name} (${item.quantity})</span>
+      <button class="btn tiny danger">x</button>
+    `;
+    row.querySelector("button").addEventListener("click", () => {
+      removeFromCart(item.id);
     });
+    itemsContainer.appendChild(row);
+  });
+
+  updateCartCounts();
 }
 
-// Checkout functionality (simplified)
-function checkout() {
-    if (cart.length === 0) {
-        alert("Your cart is empty.");
+// =============================
+// AUTHENTICATION
+// =============================
+if (loginForm) {
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    const user = users.find((u) => u.email === email && u.password === password);
+
+    if (user) {
+      currentUser = user;
+      localStorage.setItem("marketplace_current_user", JSON.stringify(user));
+      updateUIForAuth();
+      closeAuthModals();
     } else {
-        alert("Proceeding to checkout...");
+      alert("Invalid email or password");
     }
+  });
 }
 
-// Event listeners for auth buttons
-document.getElementById("login-btn").addEventListener("click", () => {
-    // Simulate user login
-    alert("Logged in!");
-    document.getElementById("login-btn").style.display = "none";
-    document.getElementById("logout-btn").style.display = "block";
-});
+if (signupForm) {
+  signupForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("signupName").value;
+    const email = document.getElementById("signupEmail").value;
+    const password = document.getElementById("signupPassword").value;
 
-document.getElementById("logout-btn").addEventListener("click", () => {
-    // Simulate user logout
-    alert("Logged out!");
-    document.getElementById("login-btn").style.display = "block";
-    document.getElementById("logout-btn").style.display = "none";
-    cart = [];  // Clear cart on logout
-    localStorage.removeItem('cart');  // Remove cart from localStorage
-    renderCart();  // Re-render the cart (which is now empty)
-});
+    if (users.some((u) => u.email === email)) {
+      alert("Email already registered!");
+      return;
+    }
 
-// Cart sidebar toggle
-function toggleCart() {
-    const cartSection = document.getElementById("cart-section");
-    cartSection.classList.toggle("translate-x-full");
+    const newUser = { name, email, password };
+    users.push(newUser);
+    localStorage.setItem("marketplace_users", JSON.stringify(users));
+
+    currentUser = newUser;
+    localStorage.setItem("marketplace_current_user", JSON.stringify(newUser));
+    updateUIForAuth();
+    closeAuthModals();
+  });
 }
 
-// Initial render
-renderProducts();
-renderPagination();
-document.getElementById("checkout-btn").addEventListener("click", checkout);
+// =============================
+// INIT
+// =============================
+document.addEventListener("DOMContentLoaded", () => {
+  paginateProducts();
+  updateCartUI();
+  checkExistingAuth();
+});
