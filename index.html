@@ -3,41 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Store</title>
+    <title>Modern Store</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <!-- Header Section -->
-    <header>
-        <h1>My Online Store</h1>
+    <!-- Header with brand and login/logout buttons -->
+    <header class="app-header">
+        <div class="brand">
+            <h1>Modern Store</h1>
+            <span class="muted">Shop the best products</span>
+        </div>
         <div id="auth-section">
-            <button id="login-btn">Login</button>
-            <button id="logout-btn" style="display: none;">Logout</button>
+            <button id="login-btn" class="btn primary">Login</button>
+            <button id="logout-btn" class="btn danger hidden">Logout</button>
         </div>
     </header>
 
-    <!-- Product Display Section -->
-    <section id="product-list">
-        <h2>Our Products</h2>
-        <div id="product-container"></div>
-        <div id="pagination"></div>
-    </section>
+    <!-- Main Product Section -->
+    <div class="container">
+        <section class="hero">
+            <div class="section-header">
+                <h2>Products</h2>
+                <div class="filters">
+                    <button class="btn tiny outline">Filter</button>
+                    <button class="btn tiny outline">Sort</button>
+                </div>
+            </div>
+            <div id="product-container" class="products-grid">
+                <!-- Product cards will be dynamically loaded here -->
+            </div>
+            <div id="pagination" class="pagination"></div>
+        </section>
 
-    <!-- Cart Section -->
-    <section id="cart-section">
-        <h2>Your Cart</h2>
-        <ul id="cart-items"></ul>
-        <button id="checkout-btn">Checkout</button>
-    </section>
-
-    <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2025 My Online Store</p>
-    </footer>
+        <!-- Cart Section -->
+        <div id="cart-section" class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Cart</h3>
+                <button onclick="toggleCart()" class="btn tiny">Close</button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <!-- Cart items will be dynamically rendered here -->
+            </div>
+            <div class="cart-footer">
+                <button id="checkout-btn" class="btn primary">Checkout</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
-    <script src="script.js"></script>
-
 </body>
 </html>
