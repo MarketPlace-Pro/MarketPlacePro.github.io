@@ -1,5 +1,3 @@
-// app.js
-
 // Dummy products data (this would come from a database in a real app)
 const products = [
     { id: 1, name: "Product 1", price: 20, description: "Description for product 1" },
@@ -27,12 +25,17 @@ function renderProducts(page = 1, itemsPerPage = 4) {
 
     paginatedProducts.forEach(product => {
         const productElement = document.createElement("div");
-        productElement.classList.add("product");
+        productElement.classList.add("product-card");
         productElement.innerHTML = `
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <p>$${product.price}</p>
-            <button onclick="addToCart(${product.id})">Add to Cart</button>
+            <img src="https://via.placeholder.com/300" alt="${product.name}" class="product-image">
+            <div class="product-body">
+                <h3 class="product-title">${product.name}</h3>
+                <p class="line-clamp-2">${product.description}</p>
+                <div class="product-meta">
+                    <span>$${product.price}</span>
+                    <button onclick="addToCart(${product.id})" class="btn primary small">Add to Cart</button>
+                </div>
+            </div>
         `;
         productContainer.appendChild(productElement);
     });
@@ -47,6 +50,7 @@ function renderPagination(page = 1, itemsPerPage = 4) {
     for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement("button");
         pageButton.textContent = i;
+        pageButton.classList.add("btn", "tiny", "outline");
         pageButton.onclick = () => {
             renderProducts(i);
             renderPagination(i);
@@ -70,8 +74,12 @@ function renderCart() {
     cartItemsElement.innerHTML = "";
 
     cart.forEach(item => {
-        const cartItemElement = document.createElement("li");
-        cartItemElement.textContent = `${item.name} - $${item.price}`;
+        const cartItemElement = document.createElement("div");
+        cartItemElement.classList.add("cart-row");
+        cartItemElement.innerHTML = `
+            <span>${item.name}</span>
+            <span>$${item.price}</span>
+        `;
         cartItemsElement.appendChild(cartItemElement);
     });
 }
@@ -102,6 +110,12 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem('cart');  // Remove cart from localStorage
     renderCart();  // Re-render the cart (which is now empty)
 });
+
+// Cart sidebar toggle
+function toggleCart() {
+    const cartSection = document.getElementById("cart-section");
+    cartSection.classList.toggle("translate-x-full");
+}
 
 // Initial render
 renderProducts();
