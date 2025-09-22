@@ -501,5 +501,5 @@ document.addEventListener('DOMContentLoaded', init);
 const backendUrl = 'https://your-hosting-service.com/api/products';
 
 // To this:
-const backendUrl = 'http://localhost:3000/api/products';
+const backendUrl = 'http://localhost:3001/api/products';
 
