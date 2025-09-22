@@ -503,10 +503,3 @@ const backendUrl = 'https://your-hosting-service.com/api/products';
 // To this:
 const backendUrl = 'http://localhost:3000/api/products';
 
-// Add this before app.listen()
-app.get('/api/products/featured', (req, res) => {
-    res.json({
-        message: "Featured products endpoint working!",
-        featured: ["Product A", "Product B", "Product C"]
-    });
-});
