@@ -496,3 +496,11 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// Add this before app.listen()
+app.get('/api/products/featured', (req, res) => {
+    res.json({
+        message: "Featured products endpoint working!",
+        featured: ["Product A", "Product B", "Product C"]
+    });
+});
