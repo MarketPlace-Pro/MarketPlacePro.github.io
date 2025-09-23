@@ -40,10 +40,16 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* FIXED: Removed duplicate .product-image declaration */
 .product-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
 }
 
 .product-body {
@@ -98,6 +104,11 @@
     transition: all 0.2s ease;
     border: none;
     cursor: pointer;
+}
+
+.btn:focus {
+    outline: 2px solid #5D5CDE;
+    outline-offset: 2px;
 }
 
 .btn.small {
@@ -245,6 +256,14 @@
     transition: all 0.2s ease;
 }
 
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .product-card, .toast, .product-image {
+        transition: none;
+        animation: none;
+    }
+}
+
 /* Loading states */
 .loading {
     opacity: 0.6;
@@ -260,35 +279,8 @@
 .cart-update {
     animation: cartBounce 0.3s ease;
 }
-/* Enhanced Image Styles */
-.product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
 
-.product-card:hover .product-image {
-    transform: scale(1.05);
-}
-
-/* Fallback for broken images */
-.product-image:before {
-    content: "📷";
-    display: block;
-    text-align: center;
-    line-height: 200px;
-    font-size: 3rem;
-    background: #f3f4f6;
-    color: #9ca3af;
-}
-
-.dark .product-image:before {
-    background: #374151;
-    color: #6b7280;
-}
-
-/* Loading state for images */
+/* Image loading state */
 .image-loading {
     background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
     background-size: 200% 100%;
