@@ -21,9 +21,9 @@ async function loadProducts() {
 
     } catch (error) {
         console.error("❌ Backend offline or error:", error.message);
-        console.log("🔄 Using local product data instead...");
+        console.log("🔄 Using local product data with real images...");
         
-        // RETURN LOCAL PRODUCT DATA AS FALLBACK
+        // RETURN LOCAL PRODUCT DATA WITH REAL IMAGE URLs
         return [
             {
                 id: 1,
@@ -33,7 +33,7 @@ async function loadProducts() {
                 originalPrice: 99.99,
                 rating: 4.5,
                 reviews: 1234,
-                image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNTAgNzVDMTI0LjMgNzUgMTAzIDk2LjMgMTAzIDEyMlYxNzhDMTAzIDIwMy43IDEyNC4zIDIyNSAxNTAgMjI1UzE5NyAyMDMuNyAxOTcgMTc4VjEyMkMxOTcgOTYuMyAxNzUuNyA3NSAxNTAgNzVaIiBmaWxsPSIjNEY0NkU1Ii8+CjxjaXJjbGUgY3g9IjEzMCIgY3k9IjE0MCIgcj0iMjAiIGZpbGw9IiM2MzY2RjEiLz4KPGV0cm9rZT0iIzRGNDZFNSIgc3Ryb2tlLXdpZHRoPSIzIiBkPSJNMTE1IDEyNUgxODUiLz4KPC9zdmc+",
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
                 description: "Premium wireless headphones with noise cancellation and 30-hour battery life.",
                 seller: "TechStore Pro",
                 shipping: "Free",
@@ -42,14 +42,70 @@ async function loadProducts() {
             {
                 id: 2,
                 name: "Smart Fitness Watch",
-                category: "fitness",
+                category: "electronics",
                 price: 199.99,
                 originalPrice: 249.99,
                 rating: 4.7,
                 reviews: 856,
-                image: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxyZWN0IHg9IjEwMCIgeT0iMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjYwIiByeD0iMzAiIGZpbGw9IiMxMTE4MjciLz4KPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTE1IiByPSI4IiBmaWxsPSIjNkI3M0ZGIi8+CjxjaXJjbGUgY3g9IjE3MCIgY3k9IjExNSIgcj0iOCIgZmlsbD0iIzZCNzNGRiIvPgo8Y2lyY2xlIGN4PSIxMzAiIGN5PSIxMzUiIHI9IjQiIGZpbGw9IiNGOTdBMzQiLz4KPGNpcmNsZSBjeD0iMTcwIiBjeT0iMTM1IiByPSI0IiBmaWxsPSIjRjk3QTM0Ii8+Cjwvc3ZnPg==",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
                 description: "Advanced fitness tracking with heart rate monitor and GPS.",
                 seller: "FitTech Solutions",
+                shipping: "Free",
+                inStock: true
+            },
+            {
+                id: 3,
+                name: "Gaming Laptop Pro",
+                category: "electronics",
+                price: 1299.99,
+                originalPrice: 1499.99,
+                rating: 4.8,
+                reviews: 2341,
+                image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop",
+                description: "High-performance gaming laptop with RTX graphics.",
+                seller: "GameTech",
+                shipping: "Free",
+                inStock: true
+            },
+            {
+                id: 4,
+                name: "Wireless Earbuds",
+                category: "electronics",
+                price: 129.99,
+                originalPrice: 179.99,
+                rating: 4.3,
+                reviews: 892,
+                image: "https://images.unsplash.com/photo-1590658165737-15a047b8b5e3?w=400&h=300&fit=crop",
+                description: "True wireless earbuds with premium sound quality.",
+                seller: "AudioTech",
+                shipping: "Free",
+                inStock: true
+            },
+            {
+                id: 5,
+                name: "Smartphone X",
+                category: "electronics",
+                price: 899.99,
+                originalPrice: 999.99,
+                rating: 4.6,
+                reviews: 1567,
+                image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
+                description: "Latest smartphone with advanced camera system.",
+                seller: "MobileTech",
+                shipping: "Free",
+                inStock: true
+            },
+            {
+                id: 6,
+                name: "Tablet Pro",
+                category: "electronics",
+                price: 599.99,
+                originalPrice: 699.99,
+                rating: 4.4,
+                reviews: 723,
+                image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
+                description: "Professional tablet for work and creativity.",
+                seller: "TabTech",
                 shipping: "Free",
                 inStock: true
             }
