@@ -516,4 +516,4 @@ function init() {
     checkExistingAuth();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', init); 
