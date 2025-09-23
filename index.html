@@ -1,159 +1,268 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MarketPlace Pro - Global E-commerce Platform</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketPlace Pro - Global E-commerce Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'primary-dark': '#4C4BC7',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="app">
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-4">
+                    <button id="menuBtn" class="lg:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold text-primary">MarketPlace Pro</h1>
+                </div>
 
-  <header class="app-header glass">
-    <div class="brand">
-      <h1>MarketPlace Pro</h1>
-      <div class="muted">Global E-commerce Platform</div>
-    </div>
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-2xl mx-8">
+                    <div class="relative w-full">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Search for products, brands, categories..."
+                            class="w-full px-4 py-2 pl-10 pr-12 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
+                        >
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
 
-    <nav class="header-actions">
-      <button id="userBtn" class="btn" aria-label="Account"><span>Account</span></button>
-      <button id="openCartBtn" class="btn" aria-label="Cart">Cart (<span id="cartCount">0</span>)</button>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <h2>Welcome Back</h2>
-      <p class="muted">Browse trending products or manage your account.</p>
-    </section>
-
-    <section id="productsSection">
-      <div class="section-header">
-        <h3>Products</h3>
-        <div class="filters">
-          <button class="category-btn btn outline category-filter" data-category="all">All</button>
-          <button class="category-btn btn outline category-filter" data-category="electronics">Electronics</button>
-          <button class="category-btn btn outline category-filter" data-category="fitness">Fitness</button>
+                <!-- Header Actions -->
+                <div class="flex items-center space-x-4">
+                    <button id="wishlistBtn" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+                        <i class="fas fa-heart text-xl"></i>
+                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                    </button>
+                    <button id="openCartBtn" class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
+                    </button>
+                    <button id="userBtn" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+                        <i class="fas fa-user text-xl"></i>
+                        <span class="hidden sm:inline text-sm">Account</span>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div id="productsContainer" class="products-grid"></div>
-
-      <!-- Pagination -->
-      <div id="pagination" class="pagination" style="margin-top:18px; display:flex; gap:8px; justify-content:center;"></div>
-    </section>
-  </main>
-
-  <!-- Cart Sidebar -->
-  <aside id="cartSidebar" class="cart-sidebar translate-x-full glass">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <button id="closeCartBtn" class="btn small" aria-label="Close cart">Close</button>
-    </div>
-
-    <div id="cartItems" class="cart-items"></div>
-
-    <div class="cart-footer">
-      <div id="cartTotal" class="cart-total">Total: $0.00</div>
-      <button id="checkoutBtn" class="btn primary">Checkout</button>
-    </div>
-  </aside>
-
-  <!-- Overlay -->
-  <div id="overlay" class="overlay hidden"></div>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Sign In</h3>
-        <button id="closeLogin" class="btn small" aria-label="Close login">✕</button>
-      </div>
-      <form id="loginForm" class="modal-body">
-        <label>Email Address
-          <input id="loginEmail" type="email" required />
-        </label>
-        <label>Password
-          <input id="loginPassword" type="password" required />
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="btn primary">Sign In</button>
-          <button type="button" class="btn" id="openSignupFromLogin">Create Account</button>
+        <!-- Mobile Search -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative">
+                <input
+                    type="text"
+                    id="mobileSearchInput"
+                    placeholder="Search products..."
+                    class="w-full px-4 py-2 pl-10 pr-12 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800"
+                >
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            </div>
         </div>
-      </form>
-    </div>
-  </div>
+    </header>
 
-  <!-- Signup Modal -->
-  <div id="signupModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Create Account</h3>
-        <button id="closeSignup" class="btn small" aria-label="Close signup">✕</button>
-      </div>
-      <form id="signupForm" class="modal-body">
-        <label>Full Name
-          <input id="signupName" type="text" required />
-        </label>
-        <label>Email Address
-          <input id="signupEmail" type="email" required />
-        </label>
-        <label>Password
-          <input id="signupPassword" type="password" required minlength="6" />
-        </label>
-        <div class="modal-actions">
-          <button type="submit" class="btn primary">Create Account</button>
-          <button type="button" class="btn" id="openLoginFromSignup">Sign In</button>
+    <!-- Main Content -->
+    <div class="flex max-w-7xl mx-auto">
+        <!-- Sidebar -->
+        <aside class="fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300">
+            <div class="p-4 h-full overflow-y-auto">
+                <div class="lg:hidden flex justify-between items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-lg font-semibold">Categories</h2>
+                    <button id="closeSidebar" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Categories -->
+                <div class="space-y-2">
+                    <h3 class="font-semibold text-gray-700 dark:text-gray-300 mb-3">Categories</h3>
+                    <div class="space-y-1">
+                        <button class="category-filter w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-category="all">
+                            <i class="fas fa-th-large mr-2"></i>All Products
+                        </button>
+                        <button class="category-filter w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-category="electronics">
+                            <i class="fas fa-laptop mr-2"></i>Electronics
+                        </button>
+                        <button class="category-filter w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" data-category="fashion">
+                            <i class="fas fa-tshirt mr-2"></i>Fashion
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 lg:ml-0 p-4 lg:p-6">
+            <!-- Products Grid -->
+            <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="pagination" class="flex justify-center mt-8 space-x-2">
+                <!-- Pagination buttons will be inserted here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 z-50 w-96 bg-white dark:bg-gray-900 shadow-2xl transform translate-x-full transition-transform duration-300">
+        <div class="h-full flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-xl font-bold">Shopping Cart</h2>
+                <button id="closeCartBtn" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="cartItems" class="flex-1 overflow-y-auto p-4">
+                <!-- Cart items will be inserted here -->
+            </div>
+            
+            <div class="border-t border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span id="cartTotal" class="text-2xl font-bold text-primary">$0.00</span>
+                </div>
+                <button id="checkoutBtn" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors">
+                    Proceed to Checkout
+                </button>
+            </div>
         </div>
-      </form>
     </div>
-  </div>
 
-  <!-- Categories Modal (mobile fallback) -->
-  <div id="categoriesModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Categories</h3>
-        <button id="closeCategoriesModal" class="btn small">Close</button>
-      </div>
-      <div class="modal-body">
-        <button class="category-filter btn" data-category="all">All</button>
-        <button class="category-filter btn" data-category="electronics">Electronics</button>
-        <button class="category-filter btn" data-category="fitness">Fitness</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- User Modal -->
-  <div id="userModal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-header">
-        <h3>Account</h3>
-        <button id="closeUserModal" class="btn small">✕</button>
-      </div>
-      <div class="modal-body">
-        <div id="userInfo" class="user-info hidden">
-          <div class="avatar" id="userInitial"></div>
-          <div>
-            <div id="userName" class="user-name"></div>
-            <div id="userEmail" class="user-email muted"></div>
-          </div>
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Login</h2>
+                    <button id="closeLogin" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="loginForm">
+                    <div class="space-y-4">
+                        <input type="email" id="loginEmail" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" required>
+                        <input type="password" id="loginPassword" placeholder="Password" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" required>
+                        <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark">Login</button>
+                    </div>
+                </form>
+                <p class="mt-4 text-center">Don't have an account? <button id="openSignupFromLogin" class="text-primary hover:underline">Sign up</button></p>
+            </div>
         </div>
-        <div class="modal-actions">
-          <button id="logoutBtn" class="btn">Sign Out</button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <!-- Bottom navigation (mobile) -->
-  <nav class="bottom-nav glass-tabbar">
-    <a id="mobileHomeBtn" class="tab-item active"><span>Home</span></a>
-    <a id="mobileCategoriesBtn" class="tab-item"><span>Categories</span></a>
-    <a id="mobileCartBtn" class="tab-item"><span>Cart</span></a>
-    <a id="mobileAccountBtn" class="tab-item"><span>Account</span></a>
-  </nav>
+    <!-- Signup Modal -->
+    <div id="signupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Sign Up</h2>
+                    <button id="closeSignup" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="signupForm">
+                    <div class="space-y-4">
+                        <input type="text" id="signupName" placeholder="Full Name" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" required>
+                        <input type="email" id="signupEmail" placeholder="Email" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" required>
+                        <input type="password" id="signupPassword" placeholder="Password" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700" required>
+                        <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark">Sign Up</button>
+                    </div>
+                </form>
+                <p class="mt-4 text-center">Already have an account? <button id="openLoginFromSignup" class="text-primary hover:underline">Login</button></p>
+            </div>
+        </div>
+    </div>
 
-  <script src="script.js" <script src="script.js"></script>
-<script src="app.js"></script> defer></script>
+    <!-- User Account Modal -->
+    <div id="userModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">Account</h2>
+                    <button id="closeUserModal" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="userInfo" class="hidden">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                            <span id="userInitial" class="text-white text-2xl font-bold"></span>
+                        </div>
+                        <h3 id="userName" class="font-semibold"></h3>
+                        <p id="userEmail" class="text-gray-600 dark:text-gray-400 text-sm"></p>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-user mr-3"></i>My Profile
+                    </button>
+                    <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-box mr-3"></i>My Orders
+                    </button>
+                    <button class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                        <i class="fas fa-heart mr-3"></i>Wishlist
+                    </button>
+                    <hr class="border-gray-200 dark:border-gray-700">
+                    <button id="logoutBtn" class="w-full text-left p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-red-600">
+                        <i class="fas fa-sign-out-alt mr-3"></i>Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed top-4 right-4 z-60 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 hidden">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Product added to cart!</span>
+        </div>
+    </div>
+
+    <!-- Bottom Mobile Navigation -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex justify-around p-3">
+            <button id="mobileHomeBtn" class="flex flex-col items-center p-2">
+                <i class="fas fa-home"></i>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button id="mobileCategoriesBtn" class="flex flex-col items-center p-2">
+                <i class="fas fa-th-large"></i>
+                <span class="text-xs mt-1">Categories</span>
+            </button>
+            <button id="mobileCartBtn" class="flex flex-col items-center p-2">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="text-xs mt-1">Cart</span>
+            </button>
+            <button id="mobileAccountBtn" class="flex flex-col items-center p-2">
+                <i class="fas fa-user"></i>
+                <span class="text-xs mt-1">Account</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>
