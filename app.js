@@ -5,7 +5,7 @@
 ///// ---------- Sample product data ----------
 // ASYNC FUNCTION TO LOAD PRODUCTS FROM BACKEND OR USE LOCAL DATA
 async function loadProducts() {
-    const backendUrl = 'http://localhost:3000/api/products';
+    const backendUrl = 'products.json';
 
     try {
         console.log("🔄 Trying to fetch products from backend...");
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 // ASYNC FUNCTION TO LOAD PRODUCTS FROM BACKEND OR USE LOCAL DATA
 async function loadProducts() {
-    const backendUrl = 'http://localhost:3000/api/products';
+    const backendUrl = 'products.json';
 
     try {
         console.log("🔄 Trying to fetch products from backend...");
@@ -810,7 +810,7 @@ if (document.readyState === 'loading') {
 // Minimal backend specific functions
 async function testBackendConnection() {
     try {
-        const response = await fetch('http://localhost:3000/api/test');
+        const response = await fetch('products.json');
         if (response.ok) {
             const data = await response.json();
             console.log('✅ Backend connection:', data.message);
@@ -834,7 +834,7 @@ async function loadProductsEnhanced() {
     }
     
     try {
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch('products.json');
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
         }

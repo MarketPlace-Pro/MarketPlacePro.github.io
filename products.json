@@ -1,0 +1,40 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Wireless Bluetooth Headphones",
+      "price": 79.99,
+      "description": "High-quality wireless headphones with noise cancellation",
+      "category": "Electronics",
+      "image": "https://via.placeholder.com/300x300/4A90E2/FFFFFF?text=Headphones",
+      "stock": 15
+    },
+    {
+      "id": 2,
+      "name": "Smart Fitness Watch", 
+      "price": 199.99,
+      "description": "Track your health and fitness with this advanced smartwatch",
+      "category": "Electronics",
+      "image": "https://via.placeholder.com/300x300/50E3C2/FFFFFF?text=Smartwatch", 
+      "stock": 8
+    },
+    {
+      "id": 3,
+      "name": "Organic Coffee Beans",
+      "price": 24.99,
+      "description": "Premium organic coffee beans from Ethiopia",
+      "category": "Food",
+      "image": "https://via.placeholder.com/300x300/B8E986/FFFFFF?text=Coffee",
+      "stock": 25
+    },
+    {
+      "id": 4,
+      "name": "Yoga Mat Premium",
+      "price": 49.99,
+      "description": "Non-slip yoga mat for comfortable exercises",
+      "category": "Fitness",
+      "image": "https://via.placeholder.com/300x300/FF6B6B/FFFFFF?text=Yoga+Mat",
+      "stock": 12
+    }
+  ]
+}
