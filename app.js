@@ -5,7 +5,7 @@
 ///// ---------- Sample product data ----------
 // ASYNC FUNCTION TO LOAD PRODUCTS FROM BACKEND OR USE LOCAL DATA
 async function loadProducts() {
-    const backendUrl = 'https://your-backend-url.onrender.com/api/products';
+    const backendUrl = 'http://localhost:3000/api/products';
 
     try {
         console.log("🔄 Trying to fetch products from backend...");
@@ -17,7 +17,16 @@ async function loadProducts() {
         
         const productsFromBackend = await response.json();
         console.log("✅ Successfully loaded products from backend!");
-        return productsFromBackend;
+        
+        // Handle different backend response structures
+        if (productsFromBackend && productsFromBackend.products) {
+            return productsFromBackend.products || productsFromBackend; // Your backend structure
+        } else if (Array.isArray(productsFromBackend)) {
+            return productsFromBackend; // Array directly
+        } else {
+            console.warn("Unexpected response format, using fallback");
+            return productsFromBackend;
+        }
 
     } catch (error) {
         console.error("❌ Backend offline or error:", error.message);
@@ -576,7 +585,7 @@ document.addEventListener('DOMContentLoaded', init);
 
 // ASYNC FUNCTION TO LOAD PRODUCTS FROM BACKEND OR USE LOCAL DATA
 async function loadProducts() {
-    const backendUrl = 'https://your-backend-url.onrender.com/api/products';
+    const backendUrl = 'http://localhost:3000/api/products';
 
     try {
         console.log("🔄 Trying to fetch products from backend...");
@@ -588,7 +597,16 @@ async function loadProducts() {
         
         const productsFromBackend = await response.json();
         console.log("✅ Successfully loaded products from backend!");
-        return productsFromBackend;
+        
+        // Handle different backend response structures
+        if (productsFromBackend && productsFromBackend.products) {
+            return productsFromBackend.products || productsFromBackend; // Your backend structure
+        } else if (Array.isArray(productsFromBackend)) {
+            return productsFromBackend; // Array directly
+        } else {
+            console.warn("Unexpected response format, using fallback");
+            return productsFromBackend;
+        }
 
     } catch (error) {
         console.error("❌ Backend offline or error:", error.message);
@@ -683,3 +701,220 @@ async function loadProducts() {
         ];
     }
 }
+
+// File-based database specific functions
+async function addProductToDatabase(productData) {
+    try {
+        const response = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            showToast('Product added successfully!');
+            return result;
+        } else {
+            throw new Error('Failed to add product');
+        }
+    } catch (error) {
+        console.error('Error adding product:', error);
+        showToast('Error adding product');
+        return null;
+    }
+}
+
+async function updateProductInDatabase(productId, productData) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/products/${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(productData)
+        });
+        
+        if (response.ok) {
+            showToast('Product updated successfully!');
+            return true;
+        } else {
+            throw new Error('Failed to update product');
+        }
+    } catch (error) {
+        console.error('Error updating product:', error);
+        showToast('Error updating product');
+        return false;
+    }
+}
+
+// Enhanced product management UI
+function setupEnhancedProductManagement() {
+    // Add admin panel if it doesn't exist
+    if (!document.getElementById('adminPanel')) {
+        const adminPanel = document.createElement('div');
+        adminPanel.id = 'adminPanel';
+        adminPanel.innerHTML = `
+            <div style="position: fixed; bottom: 80px; right: 20px; z-index: 1000;">
+                <button onclick="showAdminMenu()" style="background: #8B5CF6; color: white; padding: 12px; border-radius: 50%; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                    📦
+                </button>
+                <div id="adminMenu" style="display: none; position: absolute; bottom: 60px; right: 0; background: white; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 150px;">
+                    <button onclick="openAddProductForm()" style="width: 100%; padding: 8px; margin: 2px 0; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; cursor: pointer;">Add Product</button>
+                    <button onclick="showAllProducts()" style="width: 100%; padding: 8px; margin: 2px 0; border: 1px solid #ddd; border-radius: 4px; background: #f8f9fa; cursor: pointer;">View Products</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(adminPanel);
+    }
+}
+
+function showAdminMenu() {
+    const menu = document.getElementById('adminMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+function openAddProductForm() {
+    // Simple form implementation
+    const productName = prompt('Enter product name:');
+    if (productName) {
+        const productPrice = prompt('Enter product price:');
+        if (productPrice) {
+            addProductToDatabase({
+                name: productName,
+                price: parseFloat(productPrice),
+                description: prompt('Enter description (optional):') || '',
+                category: prompt('Enter category (optional):') || 'General',
+                stock: parseInt(prompt('Enter stock quantity (optional):') || '10')
+            }).then(() => {
+                loadProducts(); // Refresh product list
+            });
+        }
+    }
+}
+
+function showAllProducts() {
+    // Could implement a detailed product management view here
+    alert('Product management feature - would show detailed product list with edit/delete options');
+}
+
+// Initialize enhanced features when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupEnhancedProductManagement);
+} else {
+    setupEnhancedProductManagement();
+}
+
+// Minimal backend specific functions
+async function testBackendConnection() {
+    try {
+        const response = await fetch('http://localhost:3000/api/test');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Backend connection:', data.message);
+            return true;
+        }
+    } catch (error) {
+        console.error('❌ Backend connection failed:', error);
+    }
+    return false;
+}
+
+// Enhanced product loading with better error handling
+async function loadProductsEnhanced() {
+    console.log('🔄 Loading products from minimal backend...');
+    
+    // Test connection first
+    const isConnected = await testBackendConnection();
+    if (!isConnected) {
+        console.log('🔄 Backend offline, using local fallback');
+        return getLocalFallbackProducts();
+    }
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/products');
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const products = await response.json();
+        console.log(`✅ Loaded ${products.length} products from backend`);
+        return products;
+    } catch (error) {
+        console.error('❌ Error loading products:', error);
+        console.log('🔄 Using local fallback products');
+        return getLocalFallbackProducts();
+    }
+}
+
+// Replace the main loadProducts function to use enhanced version
+const originalLoadProducts = window.loadProducts;
+window.loadProducts = loadProductsEnhanced;
+
+// Simple admin interface for minimal backend
+
+// ==================== ADMIN BUTTON - SIMPLE RELIABLE VERSION ====================
+
+// Wait for DOM to be fully ready
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔄 DOM loaded, initializing admin button...');
+    initializeAdminButton();
+});
+
+// Also try initializing after a short delay as backup
+setTimeout(initializeAdminButton, 2000);
+
+function initializeAdminButton() {
+    // Don't create if already exists
+    if (document.getElementById('floatingAdminBtn')) {
+        console.log('✅ Admin button already exists');
+        return;
+    }
+    
+    console.log('🔄 Creating admin button...');
+    
+    // Create the button element
+    const adminBtn = document.createElement('button');
+    adminBtn.id = 'floatingAdminBtn';
+    adminBtn.innerHTML = '📦';
+    adminBtn.title = 'Admin Panel';
+    
+    // Simple styling that should work everywhere
+    adminBtn.style.position = 'fixed';
+    adminBtn.style.bottom = '100px';
+    adminBtn.style.right = '20px';
+    adminBtn.style.background = '#8B5CF6';
+    adminBtn.style.color = 'white';
+    adminBtn.style.border = 'none';
+    adminBtn.style.borderRadius = '50%';
+    adminBtn.style.width = '60px';
+    adminBtn.style.height = '60px';
+    adminBtn.style.fontSize = '24px';
+    adminBtn.style.cursor = 'pointer';
+    adminBtn.style.zIndex = '10000';
+    adminBtn.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.3)';
+    
+    // Click handler
+    adminBtn.addEventListener('click', function() {
+        showAdminMenu();
+    });
+    
+    // Add to page
+    document.body.appendChild(adminBtn);
+    console.log('✅ Admin button created successfully');
+}
+
+function showAdminMenu() {
+    const action = prompt('Admin Panel:\n\n1. Add New Product\n2. View Product Count\n3. Test Backend\n4. Reload Page\n\nEnter choice (1-4):');
+    
+    if (action === '1') {
+        addNewProduct();
+    } else if (action === '2') {
+        const count = window.currentProducts ? window.currentProducts.length : 'Unknown';
+        alert('Current products: ' + count);
+    } else if (action === '3') {
+        testBackendConnection();
+    } else if (action === '
+
